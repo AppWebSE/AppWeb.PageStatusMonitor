@@ -1,2 +1,2 @@
 # Page-Status-Monitor
-C# library for monitoring the status of your home page. Sends warnings and status updates through email/sms/telegram or your prefferred way when something is wrong.
+C# application for monitoring the status of your home page. Sends warnings and status updates through email/sms/telegram or your prefferred way when something is wrong.
