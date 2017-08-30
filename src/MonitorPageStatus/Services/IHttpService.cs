@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MonitorPageStatus.Services
 {
-    public interface IHttpService
+    public interface IHttpService : IDisposable
     {
         bool CanReachUrl(string url);
     }
