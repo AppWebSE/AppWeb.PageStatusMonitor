@@ -33,7 +33,7 @@ namespace MonitorPageStatus.Services
         
         public List<MonitorResult> Monitor()
         {
-            List<MonitorResult> results = new List<MonitorResult>();
+            List<MonitorResult> monitorResults = new List<MonitorResult>();
 
             foreach (var monitorUri in _monitorConfiguration.MonitorUris)
             {
@@ -44,19 +44,19 @@ namespace MonitorPageStatus.Services
                         success = _httpService.CanReachUrl(monitorUri.Uri);
                         break;
                 }
-                results.Add(new MonitorResult(monitorUri.Uri, success));
+                monitorResults.Add(new MonitorResult(monitorUri.Uri, success));
             }
 
             if (_emailService != null 
                 && _monitorConfiguration.SendEmailWhenDown 
-                && results.Any(x => !x.Success))
+                && monitorResults.Any(x => !x.Success))
             {
                 // todo: send email
                 // report list of uri's down
                 //emailService.SendEmail(to, from, subject, body, true);
             }
 
-            return results;
+            return monitorResults;
         }
 
         public void Dispose()
