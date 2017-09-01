@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MonitorPageStatus.Services
 {
@@ -35,17 +36,23 @@ namespace MonitorPageStatus.Services
         {
             List<MonitorResult> monitorResults = new List<MonitorResult>();
 
+            List<Task> tasks = new List<Task>();
             foreach (var monitorUri in _monitorConfiguration.MonitorUris)
             {
-                bool success = false;
-                switch (monitorUri.Type)
+                var task = Task.Factory.StartNew(() =>
                 {
-                    case MonitorTypeEnum.HttpGet:
-                        success = _httpService.CanReachUrl(monitorUri.Uri);
-                        break;
-                }
-                monitorResults.Add(new MonitorResult(monitorUri.Uri, success));
+                    bool success = false;
+                    switch (monitorUri.Type)
+                    {
+                        case MonitorTypeEnum.HttpGet:
+                            success = _httpService.CanReachUrl(monitorUri.Uri);
+                            break;
+                    }
+                    monitorResults.Add(new MonitorResult(monitorUri.Uri, success));
+                });
+                tasks.Add(task);
             }
+            Task.WaitAll(tasks.ToArray());
 
             if (_emailService != null 
                 && _monitorConfiguration.SendEmailWhenDown 
