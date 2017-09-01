@@ -3,21 +3,44 @@ C# console application for monitoring the status of your home page. Sends warnin
 
 **Example usage code**
 ```cs
-public void YourFunction()
+using MonitorPageStatus.Configurations;
+using MonitorPageStatus.Interfaces;
+using MonitorPageStatus.Models;
+using MonitorPageStatus.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
+namespace MonitorPageStatus.ExampleConsoleApp
 {
-    HttpConfiguration httpConfiguration = new HttpConfiguration();
-    EmailConfiguration emailConfiguration = new EmailConfiguration();
-    MonitorConfiguration monitorConfiguration = new MonitorConfiguration();
-
-    // todo: set your configurations
-
-    MonitorService monitorService = 
-	new MonitorService(monitorConfiguration, emailConfiguration, httpConfiguration)
-
-    MonitorResult result = monitorService.Monitor();
    
-    // todo: check your result, take action if you want/need to
+    public class Program
+    {
+        public IMonitorService MonitorService;
+        public Program()
+        {
+            MonitorConfiguration monitorConfiguration = new MonitorConfiguration();
+            monitorConfiguration.MonitorUris.Add(new MonitorUri(new Uri("https://www.amattias.se")));
+            monitorConfiguration.MonitorUris.Add(new MonitorUri(new Uri("https://www.shouldNotExist1337orWhat.se")));
+            monitorConfiguration.SendEmailWhenDown = false;
 
-    monitorService.Dispose();
+            MonitorService = new MonitorService(monitorConfiguration);
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Started");
+
+            Program program = new Program();
+            List<MonitorResult> monitorResults = program.MonitorService.Monitor();
+            foreach(var monitorResult in monitorResults)
+            {
+                Console.WriteLine($"{monitorResult.Uri} - {monitorResult.Success} ({monitorResult.Milliseconds}ms)");
+            }
+            
+            Console.WriteLine("Done");
+            Thread.Sleep(5000);
+        }
+    }
 }
 ```
