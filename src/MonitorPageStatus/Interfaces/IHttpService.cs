@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MonitorPageStatus.Services
+namespace MonitorPageStatus.Interfaces
 {
     public interface IHttpService : IDisposable
     {

@@ -1,5 +1,6 @@
 ﻿using MonitorPageStatus.Configurations;
 using MonitorPageStatus.Enums;
+using MonitorPageStatus.Interfaces;
 using MonitorPageStatus.Models;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,24 @@ using System.Text;
 
 namespace MonitorPageStatus.Services
 {
-    public class MonitorService : IMonitorService, IDisposable
+    public class MonitorService : IMonitorService
     {
         IEmailService _emailService;
         IHttpService _httpService;
         MonitorConfiguration _monitorConfiguration;
 
-        public MonitorService(MonitorConfiguration monitorConfiguration, EmailConfiguration emailConfiguration, HttpConfiguration httpConfiguration)
+        public MonitorService(MonitorConfiguration monitorConfiguration, EmailConfiguration emailConfiguration = null, HttpConfiguration httpConfiguration = null)
         {
-            _emailService = new EmailService(emailConfiguration);
+            if(emailConfiguration != null)
+            {
+                _emailService = new EmailService(emailConfiguration);
+            }
+
+            if(httpConfiguration == null)
+            {
+                httpConfiguration = new HttpConfiguration();
+            }
+
             _httpService = new HttpService(httpConfiguration);
             _monitorConfiguration = monitorConfiguration;
         }
@@ -37,7 +47,9 @@ namespace MonitorPageStatus.Services
                 results.Add(new MonitorResult(monitorUri.Uri, success));
             }
 
-            if (_monitorConfiguration.SendEmailWhenDown && results.Any(x => !x.Success))
+            if (_emailService != null 
+                && _monitorConfiguration.SendEmailWhenDown 
+                && results.Any(x => !x.Success))
             {
                 // todo: send email
                 // report list of uri's down

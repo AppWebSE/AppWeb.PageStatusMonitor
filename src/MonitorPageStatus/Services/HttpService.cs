@@ -1,4 +1,5 @@
 ﻿using MonitorPageStatus.Configurations;
+using MonitorPageStatus.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace MonitorPageStatus.Services
 {
-    public class HttpService : IHttpService, IDisposable
+    public class HttpService : IHttpService
     {
         private readonly HttpClient _httpClient;
 

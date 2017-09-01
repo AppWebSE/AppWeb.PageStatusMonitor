@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MonitorPageStatus.Services
+namespace MonitorPageStatus.Interfaces
 {
-    public interface IMonitorService
+    public interface IMonitorService : IDisposable
     {
         List<MonitorResult> Monitor();
     }

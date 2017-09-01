@@ -1,4 +1,5 @@
 ﻿using MonitorPageStatus.Configurations;
+using MonitorPageStatus.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace MonitorPageStatus.Services
 {
-    public class EmailService : IEmailService, IDisposable
+    public class EmailService : IEmailService
     {
         SmtpClient _smtpClient;
         EmailConfiguration _emailConfiguration;
@@ -45,11 +46,10 @@ namespace MonitorPageStatus.Services
                 return false;
             }
         }
-
+        
         public void Dispose()
         {
             _smtpClient.Dispose();
         }
-
     }
 }
