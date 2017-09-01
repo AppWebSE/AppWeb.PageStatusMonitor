@@ -10,12 +10,12 @@ namespace MonitorPageStatus.Configurations
 
         public HttpConfiguration()
         {
-            Timeout = new TimeSpan(ticks: 15 * 1000);
+            Timeout = TimeSpan.FromSeconds(15);
         }
 
         public HttpConfiguration(int timeoutSeconds)
         {
-            Timeout = new TimeSpan(ticks: timeoutSeconds * 1000);
+            Timeout = TimeSpan.FromSeconds(15);
         }
 
     }

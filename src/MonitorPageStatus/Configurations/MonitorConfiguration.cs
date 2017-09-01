@@ -9,5 +9,10 @@ namespace MonitorPageStatus.Configurations
     {
         public bool SendEmailWhenDown { get; set; }
         public List<MonitorUri> MonitorUris { get; set; }
+
+        public MonitorConfiguration()
+        {
+            MonitorUris = new List<MonitorUri>();
+        }
     }
 }

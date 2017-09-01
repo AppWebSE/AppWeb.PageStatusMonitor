@@ -8,11 +8,19 @@ namespace MonitorPageStatus.Models
     {
         public Uri Uri { get; set; }
         public bool Success { get; set; }
+        public long Milliseconds { get; set; }
 
         public MonitorResult(Uri uri, bool success)
         {
             Uri = uri;
             Success = success;
+        }
+
+        public MonitorResult(Uri uri, bool success, long milliSeconds)
+        {
+            Uri = uri;
+            Success = success;
+            Milliseconds = milliSeconds;
         }
     }
 }

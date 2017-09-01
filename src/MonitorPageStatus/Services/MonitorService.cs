@@ -4,8 +4,10 @@ using MonitorPageStatus.Interfaces;
 using MonitorPageStatus.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MonitorPageStatus.Services
@@ -18,12 +20,12 @@ namespace MonitorPageStatus.Services
 
         public MonitorService(MonitorConfiguration monitorConfiguration, EmailConfiguration emailConfiguration = null, HttpConfiguration httpConfiguration = null)
         {
-            if(emailConfiguration != null)
+            if (emailConfiguration != null)
             {
                 _emailService = new EmailService(emailConfiguration);
             }
 
-            if(httpConfiguration == null)
+            if (httpConfiguration == null)
             {
                 httpConfiguration = new HttpConfiguration();
             }
@@ -32,27 +34,25 @@ namespace MonitorPageStatus.Services
             _monitorConfiguration = monitorConfiguration;
         }
         
+
         public List<MonitorResult> Monitor()
         {
             List<MonitorResult> monitorResults = new List<MonitorResult>();
 
-            List<Task> tasks = new List<Task>();
-            foreach (var monitorUri in _monitorConfiguration.MonitorUris)
+            Parallel.ForEach(_monitorConfiguration.MonitorUris, monitorUri =>
             {
-                var task = Task.Factory.StartNew(() =>
-                {
-                    bool success = false;
-                    switch (monitorUri.Type)
-                    {
-                        case MonitorTypeEnum.HttpGet:
-                            success = _httpService.CanReachUrl(monitorUri.Uri);
-                            break;
-                    }
-                    monitorResults.Add(new MonitorResult(monitorUri.Uri, success));
-                });
-                tasks.Add(task);
-            }
-            Task.WaitAll(tasks.ToArray());
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                bool success = _httpService.IsReachable(monitorUri.Uri);
+
+                stopwatch.Stop();
+                
+                monitorResults.Add(new MonitorResult(monitorUri.Uri, success, stopwatch.ElapsedMilliseconds));
+                // todo: is it necesary to lock the section manipulating the list?
+                // lock (monitorResults){}
+
+            });
 
             if (_emailService != null 
                 && _monitorConfiguration.SendEmailWhenDown 
@@ -60,7 +60,7 @@ namespace MonitorPageStatus.Services
             {
                 // todo: send email
                 // report list of uri's down
-                //emailService.SendEmail(to, from, subject, body, true);
+                // emailService.SendEmail(to, from, subject, body, true);
             }
 
             return monitorResults;

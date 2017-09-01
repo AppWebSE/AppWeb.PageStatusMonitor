@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MonitorPageStatus.Services
 {
@@ -23,14 +24,12 @@ namespace MonitorPageStatus.Services
             _httpClient.Timeout = httpConfiguration.Timeout;
         }
 
-        public bool CanReachUrl(Uri uri)
+        public bool IsReachable(Uri uri)
         {
             try
             {
                 var response = _httpClient.GetAsync(uri).Result;
-                response.EnsureSuccessStatusCode();
-
-                return true;
+                return response.IsSuccessStatusCode;
             }
             catch (Exception e)
             {
@@ -40,8 +39,8 @@ namespace MonitorPageStatus.Services
                  * - check if timeout?
                  * - check statuscode
                  */
-                return false;
             }
+            return false;
         }
 
         public void Dispose()
