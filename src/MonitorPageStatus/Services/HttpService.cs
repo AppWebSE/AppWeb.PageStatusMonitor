@@ -22,11 +22,11 @@ namespace MonitorPageStatus.Services
             _httpClient.Timeout = httpConfiguration.Timeout;
         }
 
-        public bool CanReachUrl(string url)
+        public bool CanReachUrl(Uri uri)
         {
             try
             {
-                var response = _httpClient.GetAsync(url).Result;
+                var response = _httpClient.GetAsync(uri).Result;
                 response.EnsureSuccessStatusCode();
 
                 return true;

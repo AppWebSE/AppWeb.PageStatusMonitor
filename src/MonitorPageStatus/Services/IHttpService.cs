@@ -6,6 +6,6 @@ namespace MonitorPageStatus.Services
 {
     public interface IHttpService : IDisposable
     {
-        bool CanReachUrl(string url);
+        bool CanReachUrl(Uri uri);
     }
 }

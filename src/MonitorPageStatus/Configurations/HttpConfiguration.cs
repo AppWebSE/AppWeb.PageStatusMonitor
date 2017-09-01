@@ -10,7 +10,7 @@ namespace MonitorPageStatus.Configurations
 
         public HttpConfiguration()
         {
-
+            Timeout = new TimeSpan(ticks: 15 * 1000);
         }
 
         public HttpConfiguration(int timeoutSeconds)
