@@ -3,7 +3,6 @@ C# console application for monitoring the status of your home page. Sends warnin
 
 **Example usage code**
 ```cs
-// This method gets called by the runtime. Use this method to add services to the container.
 public void YourFunction()
 {
     HttpConfiguration httpConfiguration = new HttpConfiguration();
