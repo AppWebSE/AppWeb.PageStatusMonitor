@@ -5,7 +5,12 @@ VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonitorPageStatus", "MonitorPageStatus\MonitorPageStatus.csproj", "{F84420B9-3D32-43FC-860F-897C77A317CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitorPageStatus.ExampleConsoleApp", "MonitorPageStatus.ExampleConsoleApp\MonitorPageStatus.ExampleConsoleApp.csproj", "{F342472B-5D1C-4BD6-B42C-3045EA429B2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonitorPageStatus.ExampleConsoleApp", "MonitorPageStatus.ExampleConsoleApp\MonitorPageStatus.ExampleConsoleApp.csproj", "{F342472B-5D1C-4BD6-B42C-3045EA429B2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A07A9CC-B636-4186-AA84-1B66160DFC3F}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
