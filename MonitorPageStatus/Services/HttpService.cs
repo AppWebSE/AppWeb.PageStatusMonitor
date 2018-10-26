@@ -1,10 +1,8 @@
-﻿using MonitorPageStatus.Configurations;
-using MonitorPageStatus.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.NetworkInformation;
+using MonitorPageStatus.Configurations;
+using MonitorPageStatus.Interfaces;
 
 namespace MonitorPageStatus.Services
 {
@@ -24,7 +22,7 @@ namespace MonitorPageStatus.Services
             _httpClient.Timeout = httpConfiguration.Timeout;
         }
 
-        public bool IsReachable(Uri uri)
+        public bool SuccessfulGetResponse(Uri uri)
         {
             try
             {
@@ -41,6 +39,14 @@ namespace MonitorPageStatus.Services
                  */
             }
             return false;
+        }
+
+        public bool SuccessfulPing(Uri uri)
+        {
+            var pinger = new Ping();
+            PingReply reply = pinger.Send(uri.Host);
+
+            return reply.Status == IPStatus.Success;
         }
 
         public void Dispose()

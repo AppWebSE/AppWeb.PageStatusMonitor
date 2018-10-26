@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MonitorPageStatus.Enums
+﻿namespace MonitorPageStatus.Enums
 {
     public enum MonitorTypeEnum
     {
-        HttpGet
+        HttpGet,
+        Ping
     }
 }

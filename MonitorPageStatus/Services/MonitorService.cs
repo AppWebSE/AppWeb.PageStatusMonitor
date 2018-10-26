@@ -1,13 +1,10 @@
-﻿using MonitorPageStatus.Configurations;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using MonitorPageStatus.Configurations;
 using MonitorPageStatus.Enums;
 using MonitorPageStatus.Interfaces;
 using MonitorPageStatus.Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MonitorPageStatus.Services
@@ -44,8 +41,18 @@ namespace MonitorPageStatus.Services
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                bool success = _httpService.IsReachable(monitorUri.Uri);
+                bool success = false;
 
+                switch (monitorUri.Type)
+                {
+                    case MonitorTypeEnum.HttpGet:
+                        success = _httpService.SuccessfulGetResponse(monitorUri.Uri);
+                        break;
+                    case MonitorTypeEnum.Ping:
+                        success = _httpService.SuccessfulPing(monitorUri.Uri);
+                        break;
+                }
+                
                 stopwatch.Stop();
                 
                 monitorResults.Add(new MonitorResult(monitorUri.Uri, success, stopwatch.ElapsedMilliseconds));
