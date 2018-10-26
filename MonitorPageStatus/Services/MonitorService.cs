@@ -43,7 +43,7 @@ namespace MonitorPageStatus.Services
 
                 switch (item.CheckType)
                 {
-                    case MonitorCheckTypeEnum.HttpGet:
+                    case CheckType.HttpGet:
                         if(item.Uri != null)
                         {
                             successfull = _httpService.SuccessfulGetResponse(item.Uri);
@@ -53,7 +53,7 @@ namespace MonitorPageStatus.Services
                             successfull = _httpService.SuccessfulGetResponse(new Uri($"http://{item.IPAddress}"));
                         }
                         break;
-                    case MonitorCheckTypeEnum.Ping:
+                    case CheckType.Ping:
                         if (item.Uri != null)
                         {
                             successfull = _httpService.SuccessfullPing(item.Uri);

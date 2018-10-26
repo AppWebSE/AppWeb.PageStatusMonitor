@@ -1,6 +1,6 @@
 ﻿namespace MonitorPageStatus.Enums
 {
-    public enum MonitorCheckTypeEnum
+    public enum CheckType
     {
         HttpGet,
         Ping

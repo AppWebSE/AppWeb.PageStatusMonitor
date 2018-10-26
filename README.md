@@ -23,11 +23,11 @@ namespace MonitorPageStatus.ExampleConsoleApp
         public Program()
         {
             MonitorConfiguration = new MonitorConfiguration();
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.amattias.se"), MonitorCheckTypeEnum.HttpGet));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorCheckTypeEnum.HttpGet));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://tinkr.cloud"), MonitorCheckTypeEnum.Ping));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorCheckTypeEnum.Ping));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), MonitorCheckTypeEnum.HttpGet));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.amattias.se"), CheckType.HttpGet));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.HttpGet));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://tinkr.cloud"), CheckType.Ping));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.Ping));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), CheckType.HttpGet));
             MonitorConfiguration.SendEmailWhenDown = false;
             
             MonitorService = new MonitorService();

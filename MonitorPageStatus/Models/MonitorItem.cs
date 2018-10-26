@@ -8,15 +8,15 @@ namespace MonitorPageStatus.Models
     {
         public Uri Uri { get; set; }
         public IPAddress IPAddress { get; set; }
-        public MonitorCheckTypeEnum CheckType { get; set; }
+        public CheckType CheckType { get; set; }
 
-        public MonitorItem(Uri uri, MonitorCheckTypeEnum checkType = MonitorCheckTypeEnum.HttpGet)
+        public MonitorItem(Uri uri, CheckType checkType = CheckType.HttpGet)
         {
             Uri = uri;
             CheckType = checkType;
         }
         
-        public MonitorItem(IPAddress ipAddress, MonitorCheckTypeEnum checkType = MonitorCheckTypeEnum.HttpGet)
+        public MonitorItem(IPAddress ipAddress, CheckType checkType = CheckType.HttpGet)
         {
             IPAddress = ipAddress;
             CheckType = checkType;
