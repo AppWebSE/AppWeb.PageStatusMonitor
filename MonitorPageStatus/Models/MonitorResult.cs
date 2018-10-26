@@ -6,19 +6,13 @@ namespace MonitorPageStatus.Models
 {
     public class MonitorResult
     {
-        public Uri Uri { get; set; }
+        public MonitorItem MonitorItem { get; set; }
         public bool Success { get; set; }
         public long Milliseconds { get; set; }
-
-        public MonitorResult(Uri uri, bool success)
+        
+        public MonitorResult(MonitorItem monitorItem, bool success, long milliSeconds)
         {
-            Uri = uri;
-            Success = success;
-        }
-
-        public MonitorResult(Uri uri, bool success, long milliSeconds)
-        {
-            Uri = uri;
+            MonitorItem = monitorItem;
             Success = success;
             Milliseconds = milliSeconds;
         }

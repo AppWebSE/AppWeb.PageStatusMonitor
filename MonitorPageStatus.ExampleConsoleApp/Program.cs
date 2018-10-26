@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using MonitorPageStatus.Configurations;
 using MonitorPageStatus.Enums;
 using MonitorPageStatus.Interfaces;
@@ -16,9 +17,11 @@ namespace MonitorPageStatus.ExampleConsoleApp
         public Program()
         {
             MonitorConfiguration monitorConfiguration = new MonitorConfiguration();
-            monitorConfiguration.MonitorUris.Add(new MonitorUri(new Uri("https://www.amattias.se"), MonitorTypeEnum.HttpGet));
-            monitorConfiguration.MonitorUris.Add(new MonitorUri(new Uri("https://tinkr.cloud"), MonitorTypeEnum.Ping));
-            monitorConfiguration.MonitorUris.Add(new MonitorUri(new Uri("https://www.shouldNotExist1337orWhat.se"), MonitorTypeEnum.HttpGet));
+            monitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.amattias.se"), MonitorTypeEnum.HttpGet));
+            monitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorTypeEnum.HttpGet));
+            monitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://tinkr.cloud"), MonitorTypeEnum.Ping));
+            monitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorTypeEnum.Ping));
+            monitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), MonitorTypeEnum.HttpGet));
             monitorConfiguration.SendEmailWhenDown = false;
             
             MonitorService = new MonitorService(monitorConfiguration);
@@ -32,7 +35,7 @@ namespace MonitorPageStatus.ExampleConsoleApp
             List<MonitorResult> monitorResults = program.MonitorService.Monitor();
             foreach(var monitorResult in monitorResults)
             {
-                Console.WriteLine($"{monitorResult.Uri} - {monitorResult.Success} ({monitorResult.Milliseconds}ms)");
+                Console.WriteLine($"{monitorResult.MonitorItem.ToString()} - {monitorResult.Success} ({monitorResult.Milliseconds}ms)");
             }
             
             Console.WriteLine("Done, press any key to close");
