@@ -1,8 +1,6 @@
-﻿using MonitorPageStatus.Enums;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net;
-using System.Text;
+using MonitorPageStatus.Enums;
 
 namespace MonitorPageStatus.Models
 {
@@ -10,23 +8,23 @@ namespace MonitorPageStatus.Models
     {
         public Uri Uri { get; set; }
         public IPAddress IPAddress { get; set; }
-        public MonitorTypeEnum Type { get; set; }
+        public MonitorCheckTypeEnum CheckType { get; set; }
 
-        public MonitorItem(Uri uri, MonitorTypeEnum monitorType = MonitorTypeEnum.HttpGet)
+        public MonitorItem(Uri uri, MonitorCheckTypeEnum checkType = MonitorCheckTypeEnum.HttpGet)
         {
             Uri = uri;
-            Type = monitorType;
+            CheckType = checkType;
         }
         
-        public MonitorItem(IPAddress ipAddress, MonitorTypeEnum monitorType = MonitorTypeEnum.HttpGet)
+        public MonitorItem(IPAddress ipAddress, MonitorCheckTypeEnum checkType = MonitorCheckTypeEnum.HttpGet)
         {
             IPAddress = ipAddress;
-            Type = monitorType;
+            CheckType = checkType;
         }
 
         public override string ToString()
         {
-            var stringResult = string.Empty;
+            var stringResult = $"{CheckType.ToString()}: ";
 
             if(Uri != null)
             {

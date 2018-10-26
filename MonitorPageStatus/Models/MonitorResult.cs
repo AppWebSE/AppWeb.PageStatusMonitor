@@ -6,15 +6,20 @@ namespace MonitorPageStatus.Models
 {
     public class MonitorResult
     {
-        public MonitorItem MonitorItem { get; set; }
-        public bool Success { get; set; }
-        public long Milliseconds { get; set; }
-        
-        public MonitorResult(MonitorItem monitorItem, bool success, long milliSeconds)
+        public List<MonitorResultItem> Results { get; set; }
+
+        public MonitorResult()
         {
-            MonitorItem = monitorItem;
-            Success = success;
-            Milliseconds = milliSeconds;
+            Results = new List<MonitorResultItem>();
         }
+
+        public MonitorResult Then(Action<MonitorResult> action)
+        {
+            // Run action
+            action(this);
+            
+            return this;
+        }
+
     }
 }
