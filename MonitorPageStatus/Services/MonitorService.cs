@@ -6,6 +6,7 @@ using MonitorPageStatus.Enums;
 using MonitorPageStatus.Interfaces;
 using MonitorPageStatus.Models;
 using System.Threading.Tasks;
+using System;
 
 namespace MonitorPageStatus.Services
 {
@@ -36,26 +37,40 @@ namespace MonitorPageStatus.Services
         {
             List<MonitorResult> monitorResults = new List<MonitorResult>();
 
-            Parallel.ForEach(_monitorConfiguration.MonitorUris, monitorUri =>
+            Parallel.ForEach(_monitorConfiguration.MonitorItems, monitorItem =>
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
 
                 bool success = false;
 
-                switch (monitorUri.Type)
+                switch (monitorItem.Type)
                 {
                     case MonitorTypeEnum.HttpGet:
-                        success = _httpService.SuccessfulGetResponse(monitorUri.Uri);
+                        if(monitorItem.Uri != null)
+                        {
+                            success = _httpService.SuccessfulGetResponse(monitorItem.Uri);
+                        }
+                        else if(monitorItem.IPAddress != null)
+                        {
+                            success = _httpService.SuccessfulGetResponse(new Uri($"http://{monitorItem.IPAddress}"));
+                        }
                         break;
                     case MonitorTypeEnum.Ping:
-                        success = _httpService.SuccessfulPing(monitorUri.Uri);
+                        if (monitorItem.Uri != null)
+                        {
+                            success = _httpService.SuccessfullPing(monitorItem.Uri);
+                        }
+                        else if (monitorItem.IPAddress != null)
+                        {
+                            success = _httpService.SuccessfullPing(monitorItem.IPAddress);
+                        }
                         break;
                 }
                 
                 stopwatch.Stop();
                 
-                monitorResults.Add(new MonitorResult(monitorUri.Uri, success, stopwatch.ElapsedMilliseconds));
+                monitorResults.Add(new MonitorResult(monitorItem, success, stopwatch.ElapsedMilliseconds));
                 // todo: is it necesary to lock the section manipulating the list?
                 // lock (monitorResults){}
 

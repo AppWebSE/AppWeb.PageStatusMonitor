@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using MonitorPageStatus.Configurations;
@@ -41,10 +42,18 @@ namespace MonitorPageStatus.Services
             return false;
         }
 
-        public bool SuccessfulPing(Uri uri)
+        public bool SuccessfullPing(Uri uri)
         {
             var pinger = new Ping();
             PingReply reply = pinger.Send(uri.Host);
+
+            return reply.Status == IPStatus.Success;
+        }
+
+        public bool SuccessfullPing(IPAddress ipAddress)
+        {
+            var pinger = new Ping();
+            PingReply reply = pinger.Send(ipAddress);
 
             return reply.Status == IPStatus.Success;
         }

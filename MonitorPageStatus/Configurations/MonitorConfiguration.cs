@@ -8,11 +8,11 @@ namespace MonitorPageStatus.Configurations
     public class MonitorConfiguration
     {
         public bool SendEmailWhenDown { get; set; }
-        public List<MonitorUri> MonitorUris { get; set; }
+        public List<MonitorItem> MonitorItems { get; set; }
 
         public MonitorConfiguration()
         {
-            MonitorUris = new List<MonitorUri>();
+            MonitorItems = new List<MonitorItem>();
         }
     }
 }
