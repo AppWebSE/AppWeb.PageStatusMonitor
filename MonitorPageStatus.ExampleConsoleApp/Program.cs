@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using MonitorPageStatus.Configurations;
 using MonitorPageStatus.Enums;
@@ -9,22 +9,22 @@ using MonitorPageStatus.Services;
 
 namespace MonitorPageStatus.ExampleConsoleApp
 {
-   
-
     public class Program
     {
         public IMonitorService MonitorService;
+        public MonitorConfiguration MonitorConfiguration;
+
         public Program()
         {
-            MonitorConfiguration monitorConfiguration = new MonitorConfiguration();
-            monitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.amattias.se"), MonitorTypeEnum.HttpGet));
-            monitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorTypeEnum.HttpGet));
-            monitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://tinkr.cloud"), MonitorTypeEnum.Ping));
-            monitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorTypeEnum.Ping));
-            monitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), MonitorTypeEnum.HttpGet));
-            monitorConfiguration.SendEmailWhenDown = false;
+            MonitorConfiguration = new MonitorConfiguration();
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.amattias.se"), MonitorCheckTypeEnum.HttpGet));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorCheckTypeEnum.HttpGet));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://tinkr.cloud"), MonitorCheckTypeEnum.Ping));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), MonitorCheckTypeEnum.Ping));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), MonitorCheckTypeEnum.HttpGet));
+            MonitorConfiguration.SendEmailWhenDown = false;
             
-            MonitorService = new MonitorService(monitorConfiguration);
+            MonitorService = new MonitorService();
         }
 
         static void Main(string[] args)
@@ -32,12 +32,26 @@ namespace MonitorPageStatus.ExampleConsoleApp
             Console.WriteLine("Started");
 
             Program program = new Program();
-            List<MonitorResult> monitorResults = program.MonitorService.Monitor();
-            foreach(var monitorResult in monitorResults)
-            {
-                Console.WriteLine($"{monitorResult.MonitorItem.ToString()} - {monitorResult.Success} ({monitorResult.Milliseconds}ms)");
-            }
-            
+            program.MonitorService
+                    .RunChecks(program.MonitorConfiguration)
+                    .Then((monitorResult) => {
+                        Console.WriteLine();
+                        Console.WriteLine("Successful checks:");
+                        foreach (var result in monitorResult.Results.Where(x => x.Successful))
+                        {
+                            Console.WriteLine($"{result.MonitorItem.ToString()} - ({result.Milliseconds}ms)");
+                        }
+                    })
+                    .Then((monitorResult) => {
+                        Console.WriteLine();
+                        Console.WriteLine("Not successful checks:");
+                        foreach (var result in monitorResult.Results.Where(x => !x.Successful))
+                        {
+                            Console.WriteLine($"{result.MonitorItem.ToString()} - ({result.Milliseconds}ms)");
+                        }
+                    });
+
+            Console.WriteLine();
             Console.WriteLine("Done, press any key to close");
 
             Console.ReadKey();

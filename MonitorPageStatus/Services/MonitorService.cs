@@ -14,9 +14,8 @@ namespace MonitorPageStatus.Services
     {
         IEmailService _emailService;
         IHttpService _httpService;
-        MonitorConfiguration _monitorConfiguration;
 
-        public MonitorService(MonitorConfiguration monitorConfiguration, EmailConfiguration emailConfiguration = null, HttpConfiguration httpConfiguration = null)
+        public MonitorService(EmailConfiguration emailConfiguration = null, HttpConfiguration httpConfiguration = null)
         {
             if (emailConfiguration != null)
             {
@@ -29,63 +28,59 @@ namespace MonitorPageStatus.Services
             }
 
             _httpService = new HttpService(httpConfiguration);
-            _monitorConfiguration = monitorConfiguration;
         }
         
-
-        public List<MonitorResult> Monitor()
+        public MonitorResult RunChecks(MonitorConfiguration configuration)
         {
-            List<MonitorResult> monitorResults = new List<MonitorResult>();
+            MonitorResult result = new MonitorResult();
 
-            Parallel.ForEach(_monitorConfiguration.MonitorItems, monitorItem =>
+            Parallel.ForEach(configuration.MonitorItems, item =>
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                bool success = false;
+                bool successfull = false;
 
-                switch (monitorItem.Type)
+                switch (item.CheckType)
                 {
-                    case MonitorTypeEnum.HttpGet:
-                        if(monitorItem.Uri != null)
+                    case MonitorCheckTypeEnum.HttpGet:
+                        if(item.Uri != null)
                         {
-                            success = _httpService.SuccessfulGetResponse(monitorItem.Uri);
+                            successfull = _httpService.SuccessfulGetResponse(item.Uri);
                         }
-                        else if(monitorItem.IPAddress != null)
+                        else if(item.IPAddress != null)
                         {
-                            success = _httpService.SuccessfulGetResponse(new Uri($"http://{monitorItem.IPAddress}"));
+                            successfull = _httpService.SuccessfulGetResponse(new Uri($"http://{item.IPAddress}"));
                         }
                         break;
-                    case MonitorTypeEnum.Ping:
-                        if (monitorItem.Uri != null)
+                    case MonitorCheckTypeEnum.Ping:
+                        if (item.Uri != null)
                         {
-                            success = _httpService.SuccessfullPing(monitorItem.Uri);
+                            successfull = _httpService.SuccessfullPing(item.Uri);
                         }
-                        else if (monitorItem.IPAddress != null)
+                        else if (item.IPAddress != null)
                         {
-                            success = _httpService.SuccessfullPing(monitorItem.IPAddress);
+                            successfull = _httpService.SuccessfullPing(item.IPAddress);
                         }
                         break;
                 }
                 
                 stopwatch.Stop();
                 
-                monitorResults.Add(new MonitorResult(monitorItem, success, stopwatch.ElapsedMilliseconds));
-                // todo: is it necesary to lock the section manipulating the list?
-                // lock (monitorResults){}
-
+                result.Results.Add(new MonitorResultItem(item, successfull, stopwatch.ElapsedMilliseconds));
             });
+            
+            //todo: Create a chainable method on MonitorResult?
+            //if (_emailService != null 
+            //    && _monitorConfiguration.SendEmailWhenDown 
+            //    && monitorResult.Any(x => !x.Success))
+            //{
+            //    // todo: send email
+            //    // report list of uri's down
+            //    // emailService.SendEmail(to, from, subject, body, true);
+            //}
 
-            if (_emailService != null 
-                && _monitorConfiguration.SendEmailWhenDown 
-                && monitorResults.Any(x => !x.Success))
-            {
-                // todo: send email
-                // report list of uri's down
-                // emailService.SendEmail(to, from, subject, body, true);
-            }
-
-            return monitorResults;
+            return result;
         }
 
         public void Dispose()

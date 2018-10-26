@@ -1,13 +1,11 @@
-﻿using MonitorPageStatus.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using MonitorPageStatus.Configurations;
+using MonitorPageStatus.Models;
 
 namespace MonitorPageStatus.Interfaces
 {
     public interface IMonitorService : IDisposable
     {
-        List<MonitorResult> Monitor();
+        MonitorResult RunChecks(MonitorConfiguration configuration);
     }
 }
