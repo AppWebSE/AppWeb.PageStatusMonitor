@@ -15,6 +15,9 @@ namespace MonitorPageStatus.Models
 
         public MonitorResult Then(Action<MonitorResult> action)
         {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
             // Run action
             action(this);
             

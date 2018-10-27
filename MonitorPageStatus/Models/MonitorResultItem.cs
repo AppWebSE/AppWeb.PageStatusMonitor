@@ -12,6 +12,9 @@ namespace MonitorPageStatus.Models
 
         public MonitorResultItem(MonitorItem monitorItem, bool successful, long milliSeconds)
         {
+            if (monitorItem == null)
+                throw new ArgumentNullException(nameof(monitorItem));
+
             MonitorItem = monitorItem;
             Successful = successful;
             Milliseconds = milliSeconds;

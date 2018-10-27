@@ -24,6 +24,18 @@ namespace MonitorPageStatus.Services
 
         public bool SendEmail(string toEmail, string toName, string subject, string body, bool isBodyHtml)
         {
+            if (toEmail == null)
+                throw new ArgumentNullException(nameof(toEmail));
+
+            if (toName == null)
+                throw new ArgumentNullException(nameof(toName));
+
+            if (subject == null)
+                throw new ArgumentNullException(nameof(subject));
+
+            if (body == null)
+                throw new ArgumentNullException(nameof(body));
+
             try { 
                 MailAddress fromAddress = new MailAddress(_emailConfiguration.FromEmail, _emailConfiguration.FromName);
                 MailAddress toAddress = new MailAddress(toEmail, toName);

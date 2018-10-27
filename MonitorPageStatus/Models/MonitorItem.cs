@@ -12,12 +12,18 @@ namespace MonitorPageStatus.Models
 
         public MonitorItem(Uri uri, CheckType checkType = CheckType.HttpGet)
         {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
             Uri = uri;
             CheckType = checkType;
         }
         
         public MonitorItem(IPAddress ipAddress, CheckType checkType = CheckType.HttpGet)
         {
+            if (ipAddress == null)
+                throw new ArgumentNullException(nameof(ipAddress));
+
             IPAddress = ipAddress;
             CheckType = checkType;
         }

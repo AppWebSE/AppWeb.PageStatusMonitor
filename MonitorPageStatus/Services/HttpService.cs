@@ -25,6 +25,9 @@ namespace MonitorPageStatus.Services
 
         public bool SuccessfulGetResponse(Uri uri)
         {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
             try
             {
                 var response = _httpClient.GetAsync(uri).Result;
@@ -44,6 +47,9 @@ namespace MonitorPageStatus.Services
 
         public bool SuccessfullPing(Uri uri)
         {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
             var pinger = new Ping();
             PingReply reply = pinger.Send(uri.Host);
 
@@ -52,6 +58,10 @@ namespace MonitorPageStatus.Services
 
         public bool SuccessfullPing(IPAddress ipAddress)
         {
+            if (ipAddress == null)
+                throw new ArgumentNullException(nameof(ipAddress));
+                
+
             var pinger = new Ping();
             PingReply reply = pinger.Send(ipAddress);
 

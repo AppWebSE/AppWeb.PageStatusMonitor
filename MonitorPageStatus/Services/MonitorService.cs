@@ -32,6 +32,9 @@ namespace MonitorPageStatus.Services
         
         public MonitorResult RunChecks(MonitorConfiguration configuration)
         {
+            if (configuration == null)
+                throw new ArgumentNullException(nameof(configuration));
+
             MonitorResult result = new MonitorResult();
 
             Parallel.ForEach(configuration.MonitorItems, item =>
