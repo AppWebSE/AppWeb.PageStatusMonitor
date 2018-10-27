@@ -7,6 +7,7 @@ The following is from the ExampleConsoleApp provided in the solution
 using System;
 using System.Linq;
 using System.Net;
+using MonitorPageStatus.Actions;
 using MonitorPageStatus.Configurations;
 using MonitorPageStatus.Enums;
 using MonitorPageStatus.Interfaces;
@@ -23,9 +24,7 @@ namespace MonitorPageStatus.ExampleConsoleApp
         public Program()
         {
             MonitorConfiguration = new MonitorConfiguration();
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.amattias.se"), CheckType.HttpGet));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.HttpGet));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://tinkr.cloud"), CheckType.Ping));
+            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://appweb.se"), CheckType.HttpGet));
             MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.Ping));
             MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), CheckType.HttpGet));
             MonitorConfiguration.SendEmailWhenDown = false;
@@ -36,26 +35,12 @@ namespace MonitorPageStatus.ExampleConsoleApp
         static void Main(string[] args)
         {
             Console.WriteLine("Started");
-
+            
             Program program = new Program();
-            program.MonitorService
-                    .RunChecks(program.MonitorConfiguration)
-                    .Then((monitorResult) => {
-                        Console.WriteLine();
-                        Console.WriteLine("Successful checks:");
-                        foreach (var result in monitorResult.Results.Where(x => x.Successful))
-                        {
-                            Console.WriteLine($"{result.MonitorItem.ToString()} - ({result.Milliseconds}ms)");
-                        }
-                    })
-                    .Then((monitorResult) => {
-                        Console.WriteLine();
-                        Console.WriteLine("Not successful checks:");
-                        foreach (var result in monitorResult.Results.Where(x => !x.Successful))
-                        {
-                            Console.WriteLine($"{result.MonitorItem.ToString()} - ({result.Milliseconds}ms)");
-                        }
-                    });
+            var runResult = program.MonitorService
+                                    .RunChecks(program.MonitorConfiguration)
+                                    .Then(ConsoleActions.WriteSuccessful)
+                                    .Then(ConsoleActions.WriteFailed);
 
             Console.WriteLine();
             Console.WriteLine("Done, press any key to close");
