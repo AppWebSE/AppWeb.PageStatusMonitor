@@ -34,9 +34,12 @@ namespace MonitorPageStatus.ExampleConsoleApp
             
             Program program = new Program();
             var runResult = program.MonitorService
-                                    .RunChecks(program.MonitorConfiguration)
-                                    .Then(ConsoleActions.WriteSuccessful)
-                                    .Then(ConsoleActions.WriteFailed);
+                                    .RunChecks(program.MonitorConfiguration) // Runs the check
+                                    //.OnlySuccessful() // filter so we only get successful checks
+                                    //.OnlyFailed() // filter so we only get failed checks
+                                    //.LongExecutionTime(500) // filter so we just get checks with long excution time 
+                                    .Then(ConsoleActions.WriteSuccessful) // console log successful checks
+                                    .Then(ConsoleActions.WriteFailed); //console log failed checks
 
             Console.WriteLine();
             Console.WriteLine("Done, press any key to close");

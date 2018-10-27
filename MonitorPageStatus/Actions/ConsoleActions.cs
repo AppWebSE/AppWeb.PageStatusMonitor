@@ -11,7 +11,7 @@ namespace MonitorPageStatus.Actions
             Console.WriteLine("Successful checks:");
             foreach (var result in monitorResult.Results.Where(x => x.Successful))
             {
-                Console.WriteLine($"{result.MonitorItem.ToString()} - ({result.Milliseconds}ms)");
+                Console.WriteLine($"{result.MonitorItem.ToString()} - {result.Successful} ({result.Milliseconds}ms)");
             }
         };
 
@@ -20,7 +20,7 @@ namespace MonitorPageStatus.Actions
             Console.WriteLine("Not successful checks:");
             foreach (var result in monitorResult.Results.Where(x => !x.Successful))
             {
-                Console.WriteLine($"{result.MonitorItem.ToString()} - ({result.Milliseconds}ms)");
+                Console.WriteLine($"{result.MonitorItem.ToString()} - {result.Successful} ({result.Milliseconds}ms)");
             }
         };
     }
