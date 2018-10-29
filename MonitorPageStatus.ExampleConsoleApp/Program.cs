@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using MonitorPageStatus.Actions;
 using MonitorPageStatus.Configurations;
@@ -13,19 +13,19 @@ namespace MonitorPageStatus.ExampleConsoleApp
     public class Program
     {
         public IMonitorService MonitorService;
-        public MonitorConfiguration MonitorConfiguration;
 
         public Program()
         {
-            MonitorConfiguration = new MonitorConfiguration();
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.amattias.se"), CheckType.HttpGet));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.HttpGet));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://tinkr.cloud"), CheckType.Ping));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.Ping));
-            MonitorConfiguration.MonitorItems.Add(new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), CheckType.HttpGet));
-            MonitorConfiguration.SendEmailWhenDown = false;
+            List<MonitorItem> monitorItems = new List<MonitorItem>() {
+                new MonitorItem(new Uri("https://www.amattias.se"), CheckType.HttpGet),
+                new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.HttpGet),
+                new MonitorItem(new Uri("https://tinkr.cloud"), CheckType.Ping),
+                new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.Ping),
+                new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), CheckType.HttpGet)
+            };
             
-            MonitorService = new MonitorService();
+            var monitorConfiguration = new MonitorConfiguration(monitorItems, ConsoleActions.WriteCheckStatus);
+            MonitorService = new MonitorService(monitorConfiguration);
         }
 
         static void Main(string[] args)
@@ -34,12 +34,13 @@ namespace MonitorPageStatus.ExampleConsoleApp
             
             Program program = new Program();
             var runResult = program.MonitorService
-                                    .RunChecks(program.MonitorConfiguration) // Runs the check
-                                    //.OnlySuccessful() // filter so we only get successful checks
-                                    //.OnlyFailed() // filter so we only get failed checks
-                                    //.LongExecutionTime(500) // filter so we just get checks with long excution time 
-                                    .Then(ConsoleActions.WriteSuccessful) // console log successful checks
-                                    .Then(ConsoleActions.WriteFailed); //console log failed checks
+                                    .RunChecks(); // Runs the check
+                                    // Optional extentions:
+                                    //.FilterOnlySuccessful() // filter so we only get successful checks
+                                    //.FilterOnlyFailed() // filter so we only get failed checks
+                                    //.FilterLongExecutionTime(500) // filter so we just get checks with long excution time 
+                                    //.Then(ConsoleActions.WriteSuccessfulSummary) // console write summary of successful checks
+                                    //.Then(ConsoleActions.WriteFailedSummary) // console write summary of failed checks
 
             Console.WriteLine();
             Console.WriteLine("Done, press any key to close");
