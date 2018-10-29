@@ -30,7 +30,9 @@ namespace MonitorPageStatus.ExampleConsoleApp
                 new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), CheckType.HttpGet)
             };
             
-            var monitorConfiguration = new MonitorConfiguration(monitorItems, ConsoleActions.WriteCheckStatus);
+            var monitorConfiguration = new MonitorConfiguration(monitorItems: monitorItems, 
+                                                                onCheckCompleteAction: ConsoleActions.WriteCheckStatus, 
+                                                                maxDegreeOfParallelism: 3);
             MonitorService = new MonitorService(monitorConfiguration);
         }
 
