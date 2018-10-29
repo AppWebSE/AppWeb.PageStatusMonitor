@@ -25,21 +25,21 @@ namespace MonitorPageStatus.Models
             return this;
         }
         
-        public MonitorResult OnlySuccessful()
+        public MonitorResult FilterOnlySuccessful()
         {
             this.Results = this.Results.Where(x => x.Successful).ToList();
 
             return this;
         }
 
-        public MonitorResult OnlyFailed()
+        public MonitorResult FilterOnlyFailed()
         {
             this.Results = this.Results.Where(x => !x.Successful).ToList();
 
             return this;
         }
 
-        public MonitorResult LongExecutionTime(int largerThan)
+        public MonitorResult FilterLongExecutionTime(int largerThan)
         {
             this.Results = this.Results.Where(x => x.Milliseconds > largerThan).ToList();
 

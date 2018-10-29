@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
+using System.Threading.Tasks;
 using MonitorPageStatus.Configurations;
 using MonitorPageStatus.Enums;
 using MonitorPageStatus.Interfaces;
 using MonitorPageStatus.Models;
-using System.Threading.Tasks;
-using System;
 
 namespace MonitorPageStatus.Services
 {
     public class MonitorService : IMonitorService
     {
+        MonitorConfiguration _monitorConfiguration;
         IEmailService _emailService;
         IHttpService _httpService;
 
-        public MonitorService(EmailConfiguration emailConfiguration = null, HttpConfiguration httpConfiguration = null)
+        public MonitorService(MonitorConfiguration monitorConfiguration, EmailConfiguration emailConfiguration = null, HttpConfiguration httpConfiguration = null)
         {
+            if (monitorConfiguration == null)
+                throw new ArgumentNullException(nameof(monitorConfiguration));
+
+            _monitorConfiguration = monitorConfiguration;
+
             if (emailConfiguration != null)
             {
                 _emailService = new EmailService(emailConfiguration);
@@ -30,14 +34,11 @@ namespace MonitorPageStatus.Services
             _httpService = new HttpService(httpConfiguration);
         }
         
-        public MonitorResult RunChecks(MonitorConfiguration configuration)
+        public MonitorResult RunChecks()
         {
-            if (configuration == null)
-                throw new ArgumentNullException(nameof(configuration));
-
             MonitorResult result = new MonitorResult();
 
-            Parallel.ForEach(configuration.MonitorItems, item =>
+            Parallel.ForEach(_monitorConfiguration.MonitorItems, item =>
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
@@ -69,20 +70,14 @@ namespace MonitorPageStatus.Services
                 }
                 
                 stopwatch.Stop();
-                
-                result.Results.Add(new MonitorResultItem(item, successfull, stopwatch.ElapsedMilliseconds));
+
+                var monitorResultItem = new MonitorResultItem(item, successfull, stopwatch.ElapsedMilliseconds);
+
+                _monitorConfiguration.OnCheckCompleteAction?.Invoke(monitorResultItem);
+
+                result.Results.Add(monitorResultItem);
             });
             
-            //todo: Create a chainable method on MonitorResult?
-            //if (_emailService != null 
-            //    && _monitorConfiguration.SendEmailWhenDown 
-            //    && monitorResult.Any(x => !x.Success))
-            //{
-            //    // todo: send email
-            //    // report list of uri's down
-            //    // emailService.SendEmail(to, from, subject, body, true);
-            //}
-
             return result;
         }
 
