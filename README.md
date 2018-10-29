@@ -1,12 +1,45 @@
 # Monitor-Page-Status
 C# console application for monitoring the status of your home page. Sends warnings and status updates through email/sms/telegram or your prefferred way when something is wrong.
 
+## Example configuration
+```json
+{
+  "AppSettings": {
+    "MaxDegreeOfParallelism": 3,
+    "MonitorItems": [
+      {
+        "CheckUri": "https://www.appweb.se",
+        "CheckType": "HttpGet"
+      },
+      {
+        "CheckIPAddress": "127.0.0.1",
+        "CheckType": "Ping"
+      },
+      {
+        "CheckUri": "https://www.shouldNotExist1337orWhat.se",
+        "CheckType": "HttpGet"
+      }
+    ],
+    "EmailConfiguration": {
+      "FromEmail": "<your-email>",
+      "FromName": "<your-name>",
+      "ToEmail": "<to-email>",
+      "ToName": "<to-name>",
+      "SmtpHost": "<smtp-host>",
+      "SmtpUsername": "<smtp-username>",
+      "SmtpPassword": "<smtp-password>",
+      "UseSSL": true
+    }
+  }
+}
+```
+
 ## Example usage code
 The following is from the ExampleConsoleApp provided in the solution
-```cs
+```csharp
 using System;
-using System.Collections.Generic;
-using System.Net;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 using MonitorPageStatus.Actions;
 using MonitorPageStatus.Configurations;
 using MonitorPageStatus.Enums;
@@ -19,19 +52,31 @@ namespace MonitorPageStatus.ExampleConsoleApp
     public class Program
     {
         public IMonitorService MonitorService;
+        public IEmailService EmailService;
 
         public Program()
         {
-            List<MonitorItem> monitorItems = new List<MonitorItem>() {
-                new MonitorItem(new Uri("https://www.amattias.se"), CheckType.HttpGet),
-                new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.HttpGet),
-                new MonitorItem(new Uri("https://tinkr.cloud"), CheckType.Ping),
-                new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.Ping),
-                new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), CheckType.HttpGet)
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            IConfigurationRoot configuration = builder.Build();
+
+            var appConfiguration = configuration.GetSection("AppSettings").Get<AppSettings>();
+
+            EmailService = new EmailService(appConfiguration.EmailConfiguration);
+
+            // Actions to be run after each check result
+            Action<MonitorResultItem> onCheckCompleteAction = (monitorResultItem) =>
+            {
+                // Console write status
+                ConsoleActions.WriteCheckStatus(monitorResultItem);
+                // Email if check fails
+                EmailActions.SendEmailOnFail(monitorResultItem, EmailService);
             };
-            
-            var monitorConfiguration = new MonitorConfiguration(monitorItems: monitorItems, 
-                                                                onCheckCompleteAction: ConsoleActions.WriteCheckStatus, 
+
+            var monitorConfiguration = new MonitorConfiguration(monitorItems: appConfiguration.MonitorItems, 
+                                                                onCheckCompleteAction: onCheckCompleteAction, 
                                                                 maxDegreeOfParallelism: 3);
             MonitorService = new MonitorService(monitorConfiguration);
         }

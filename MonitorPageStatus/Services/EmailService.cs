@@ -15,50 +15,48 @@ namespace MonitorPageStatus.Services
 
         public EmailService(EmailConfiguration emailConfiguration)
         {
+            if (emailConfiguration == null)
+                throw new ArgumentNullException(nameof(emailConfiguration));
+
             _emailConfiguration = emailConfiguration;
 
-            _smtpClient = new SmtpClient(_emailConfiguration.Host);
-            _smtpClient.Credentials = new NetworkCredential(_emailConfiguration.Username, _emailConfiguration.Password);
+            _smtpClient = new SmtpClient(_emailConfiguration.SmtpHost);
+            _smtpClient.Credentials = new NetworkCredential(_emailConfiguration.SmtpUsername, _emailConfiguration.SmtpPassword);
             _smtpClient.EnableSsl = _emailConfiguration.UseSSL;
         }
-
-        public bool SendEmail(string toEmail, string toName, string subject, string body, bool isBodyHtml)
+        
+        public bool SendEmail(string subject, string body, bool isBodyHtml)
         {
-            if (toEmail == null)
-                throw new ArgumentNullException(nameof(toEmail));
-
-            if (toName == null)
-                throw new ArgumentNullException(nameof(toName));
-
             if (subject == null)
                 throw new ArgumentNullException(nameof(subject));
 
             if (body == null)
                 throw new ArgumentNullException(nameof(body));
 
-            try { 
+            try
+            {
                 MailAddress fromAddress = new MailAddress(_emailConfiguration.FromEmail, _emailConfiguration.FromName);
-                MailAddress toAddress = new MailAddress(toEmail, toName);
-                MailMessage mailMessage = new MailMessage(fromAddress, toAddress);
-                
-                mailMessage.Subject = subject;
-                mailMessage.SubjectEncoding = Encoding.UTF8;
-                
-                mailMessage.Body = body;
-                mailMessage.BodyEncoding = Encoding.UTF8;
-                mailMessage.IsBodyHtml = isBodyHtml;
+                MailAddress toAddress = new MailAddress(_emailConfiguration.ToEmail, _emailConfiguration.ToName);
+                MailMessage mailMessage = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    SubjectEncoding = Encoding.UTF8,
+                    Body = body,
+                    BodyEncoding = Encoding.UTF8,
+                    IsBodyHtml = isBodyHtml
+                };
 
                 _smtpClient.Send(mailMessage);
 
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 // todo: check exception and handle
                 return false;
             }
         }
-        
+
         public void Dispose()
         {
             _smtpClient.Dispose();

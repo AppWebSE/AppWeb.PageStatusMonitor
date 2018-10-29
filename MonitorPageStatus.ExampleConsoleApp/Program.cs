@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 using MonitorPageStatus.Actions;
 using MonitorPageStatus.Configurations;
-using MonitorPageStatus.Enums;
 using MonitorPageStatus.Interfaces;
 using MonitorPageStatus.Models;
 using MonitorPageStatus.Services;
@@ -13,20 +12,32 @@ namespace MonitorPageStatus.ExampleConsoleApp
     public class Program
     {
         public IMonitorService MonitorService;
+        public IEmailService EmailService;
 
         public Program()
         {
-            List<MonitorItem> monitorItems = new List<MonitorItem>() {
-                new MonitorItem(new Uri("https://www.amattias.se"), CheckType.HttpGet),
-                new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.HttpGet),
-                new MonitorItem(new Uri("https://tinkr.cloud"), CheckType.Ping),
-                new MonitorItem(IPAddress.Parse("184.168.221.51"), CheckType.Ping),
-                new MonitorItem(new Uri("https://www.shouldNotExist1337orWhat.se"), CheckType.HttpGet)
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
+
+            IConfigurationRoot configuration = builder.Build();
+
+            var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
+
+            EmailService = new EmailService(appSettings.EmailConfiguration);
+
+            // Actions to be run after each check result
+            Action<MonitorResultItem> onCheckCompleteAction = (monitorResultItem) =>
+            {
+                // Console write status
+                ConsoleActions.WriteCheckStatus(monitorResultItem);
+                // Email if check fails
+                EmailActions.SendEmailOnFail(monitorResultItem, EmailService);
             };
 
-            var monitorConfiguration = new MonitorConfiguration(monitorItems: monitorItems, 
-                                                                onCheckCompleteAction: ConsoleActions.WriteCheckStatus, 
-                                                                maxDegreeOfParallelism: 3);
+            var monitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
+                                                                onCheckCompleteAction: onCheckCompleteAction, 
+                                                                maxDegreeOfParallelism: appSettings.MaxDegreeOfParallelism);
             MonitorService = new MonitorService(monitorConfiguration);
         }
 
