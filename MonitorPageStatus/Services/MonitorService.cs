@@ -38,7 +38,7 @@ namespace MonitorPageStatus.Services
         {
             MonitorResult result = new MonitorResult();
 
-            Parallel.ForEach(_monitorConfiguration.MonitorItems, item =>
+            Parallel.ForEach(_monitorConfiguration.MonitorItems, new ParallelOptions() { MaxDegreeOfParallelism = _monitorConfiguration.MaxDegreeOfParallelism }, item =>
             {
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
