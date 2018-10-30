@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace MonitorPageStatus.Interfaces
+namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IHttpService : IDisposable
     {

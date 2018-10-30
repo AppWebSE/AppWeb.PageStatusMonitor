@@ -1,9 +1,9 @@
-﻿using MonitorPageStatus.Configurations;
+﻿using AppWeb.PageStatusMonitor.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MonitorPageStatus.Interfaces
+namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IEmailService : IDisposable
     {

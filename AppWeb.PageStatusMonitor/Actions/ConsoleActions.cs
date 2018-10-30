@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using MonitorPageStatus.Models;
+using AppWeb.PageStatusMonitor.Models;
 
-namespace MonitorPageStatus.Actions
+namespace AppWeb.PageStatusMonitor.Actions
 {
     public static class ConsoleActions
     {

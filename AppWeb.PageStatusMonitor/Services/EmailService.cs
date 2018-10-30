@@ -1,12 +1,12 @@
-﻿using MonitorPageStatus.Configurations;
-using MonitorPageStatus.Interfaces;
+﻿using AppWeb.PageStatusMonitor.Configurations;
+using AppWeb.PageStatusMonitor.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 
-namespace MonitorPageStatus.Services
+namespace AppWeb.PageStatusMonitor.Services
 {
     public class EmailService : IEmailService
     {

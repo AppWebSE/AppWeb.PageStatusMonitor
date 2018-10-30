@@ -288,4 +288,4 @@ __pycache__/
 *.xsd.cs
 
 # private settings
-/MonitorPageStatus.ExampleConsoleApp/appsettings.PRIVATE.json
+/AppWeb.PageStatusMonitor.ExampleConsoleApp/appsettings.PRIVATE.json
