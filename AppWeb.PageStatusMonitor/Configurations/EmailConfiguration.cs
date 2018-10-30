@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MonitorPageStatus.Configurations
+namespace AppWeb.PageStatusMonitor.Configurations
 {
     public class EmailConfiguration
     {

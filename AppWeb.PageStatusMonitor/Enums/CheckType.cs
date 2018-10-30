@@ -1,4 +1,4 @@
-﻿namespace MonitorPageStatus.Enums
+﻿namespace AppWeb.PageStatusMonitor.Enums
 {
     public enum CheckType
     {

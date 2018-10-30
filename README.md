@@ -1,5 +1,11 @@
-# Monitor-Page-Status
-C# console application for monitoring the status of your home page. Sends warnings and status updates through email/sms/telegram or your prefferred way when something is wrong.
+# AppWeb.PageStatusMonitor
+C# package and application for monitoring the status of your home page. Sends warnings and status updates through email/sms/telegram or your prefferred way when something is wrong.
+
+## Installation
+The package can be installed through nuget
+```nuget
+Install-Package AppWeb.PageStatusMonitor
+```
 
 ## Example configuration
 ```json
@@ -33,7 +39,7 @@ C# console application for monitoring the status of your home page. Sends warnin
   }
 }
 ```
-
+ 
 ## Example usage code
 The following is from the ExampleConsoleApp provided in the solution
 ```csharp

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MonitorPageStatus\MonitorPageStatus.csproj" />
+    <ProjectReference Include="..\AppWeb.PageStatusMonitor\AppWeb.PageStatusMonitor.csproj" />
   </ItemGroup>
 
 </Project>

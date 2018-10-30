@@ -1,8 +1,8 @@
 ﻿using System;
-using MonitorPageStatus.Interfaces;
-using MonitorPageStatus.Models;
+using AppWeb.PageStatusMonitor.Interfaces;
+using AppWeb.PageStatusMonitor.Models;
 
-namespace MonitorPageStatus.Actions
+namespace AppWeb.PageStatusMonitor.Actions
 {
     public class EmailActions
     {

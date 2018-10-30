@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
-using MonitorPageStatus.Enums;
+using AppWeb.PageStatusMonitor.Enums;
 
-namespace MonitorPageStatus.Models
+namespace AppWeb.PageStatusMonitor.Models
 {
     public class MonitorItem
     {

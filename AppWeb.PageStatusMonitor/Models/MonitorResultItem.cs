@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MonitorPageStatus.Models
+namespace AppWeb.PageStatusMonitor.Models
 {
     public class MonitorResultItem
     {

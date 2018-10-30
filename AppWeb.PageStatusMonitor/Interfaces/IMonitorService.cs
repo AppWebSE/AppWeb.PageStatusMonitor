@@ -1,7 +1,7 @@
 ﻿using System;
-using MonitorPageStatus.Models;
+using AppWeb.PageStatusMonitor.Models;
 
-namespace MonitorPageStatus.Interfaces
+namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IMonitorService : IDisposable
     {

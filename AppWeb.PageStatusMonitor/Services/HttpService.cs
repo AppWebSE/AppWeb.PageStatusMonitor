@@ -2,10 +2,10 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
-using MonitorPageStatus.Configurations;
-using MonitorPageStatus.Interfaces;
+using AppWeb.PageStatusMonitor.Configurations;
+using AppWeb.PageStatusMonitor.Interfaces;
 
-namespace MonitorPageStatus.Services
+namespace AppWeb.PageStatusMonitor.Services
 {
     public class HttpService : IHttpService
     {

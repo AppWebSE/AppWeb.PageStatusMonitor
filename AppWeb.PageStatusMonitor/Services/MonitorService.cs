@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using MonitorPageStatus.Configurations;
-using MonitorPageStatus.Enums;
-using MonitorPageStatus.Interfaces;
-using MonitorPageStatus.Models;
+using AppWeb.PageStatusMonitor.Configurations;
+using AppWeb.PageStatusMonitor.Enums;
+using AppWeb.PageStatusMonitor.Interfaces;
+using AppWeb.PageStatusMonitor.Models;
 
-namespace MonitorPageStatus.Services
+namespace AppWeb.PageStatusMonitor.Services
 {
     public class MonitorService : IMonitorService
     {

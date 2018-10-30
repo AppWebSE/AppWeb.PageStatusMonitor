@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MonitorPageStatus.Models
+namespace AppWeb.PageStatusMonitor.Models
 {
     public class MonitorResult
     {

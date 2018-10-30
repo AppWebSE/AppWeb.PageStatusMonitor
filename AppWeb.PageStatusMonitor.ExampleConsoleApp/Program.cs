@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using MonitorPageStatus.Actions;
-using MonitorPageStatus.Configurations;
-using MonitorPageStatus.Interfaces;
-using MonitorPageStatus.Models;
-using MonitorPageStatus.Services;
+using AppWeb.PageStatusMonitor.Actions;
+using AppWeb.PageStatusMonitor.Configurations;
+using AppWeb.PageStatusMonitor.Interfaces;
+using AppWeb.PageStatusMonitor.Models;
+using AppWeb.PageStatusMonitor.Services;
 
-namespace MonitorPageStatus.ExampleConsoleApp
+namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 {
     public class Program
     {

@@ -1,9 +1,9 @@
-﻿using MonitorPageStatus.Models;
+﻿using AppWeb.PageStatusMonitor.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MonitorPageStatus.Configurations
+namespace AppWeb.PageStatusMonitor.Configurations
 {
     public class MonitorConfiguration
     {
