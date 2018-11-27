@@ -7,7 +7,46 @@ The package can be installed through nuget https://www.nuget.org/packages/AppWeb
 Install-Package AppWeb.PageStatusMonitor
 ```
 
-## Example configuration
+## Most simple example usage of monitor service
+```csharp
+    using AppWeb.PageStatusMonitor.Interfaces;
+    using AppWeb.PageStatusMonitor.Models;
+    using AppWeb.PageStatusMonitor.Services;
+    ...
+
+    IMonitorService monitorService = new MonitorService(new HttpService());
+
+    var result = monitorService.Check(new MonitorItem(new Uri("https://appweb.se")));
+
+    // add your action on the result
+
+    ...
+```
+The code above is the most simple way of using this package and running simple checks.
+
+## Different supported check types
+Monitor items can be configured to chech either a URI och a IPAdress and checking if either a Get request or a Ping is successful. More advanced use cases will be supported in the future.
+
+```csharp
+    using AppWeb.PageStatusMonitor.Enums;
+    using AppWeb.PageStatusMonitor.Models;
+    ...
+
+    // URI, when no CheckType is provided it will perform HttpGet by default
+    var item1 = new MonitorItem(new Uri("https://appweb.se"));
+    // URI to be checked with ping 
+    var item2 = new MonitorItem(new Uri("https://appweb.se"), CheckType.Ping);
+
+
+    // IPAddress to explicity be checked with Get-request
+    var item3 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.HttpGet);
+    // IPAdddress to be checked with ping 
+    var item4 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.Ping);
+
+    ...
+```
+
+## Example configuration for more advanced usage
 ```json
 {
   "AppSettings": {
@@ -40,25 +79,25 @@ Install-Package AppWeb.PageStatusMonitor
 }
 ```
  
-## Example usage code
+## Advanced example usage code
 The following is from the ExampleConsoleApp provided in the solution
 ```csharp
 using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using MonitorPageStatus.Actions;
-using MonitorPageStatus.Configurations;
-using MonitorPageStatus.Enums;
-using MonitorPageStatus.Interfaces;
-using MonitorPageStatus.Models;
-using MonitorPageStatus.Services;
+using AppWeb.PageStatusMonitor.Actions;
+using AppWeb.PageStatusMonitor.Configurations;
+using AppWeb.PageStatusMonitor.Interfaces;
+using AppWeb.PageStatusMonitor.Models;
+using AppWeb.PageStatusMonitor.Services;
 
-namespace MonitorPageStatus.ExampleConsoleApp
+namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 {
     public class Program
     {
         public IMonitorService MonitorService;
         public IEmailService EmailService;
+        public MonitorConfiguration MonitorConfiguration;
 
         public Program()
         {
@@ -68,9 +107,7 @@ namespace MonitorPageStatus.ExampleConsoleApp
 
             IConfigurationRoot configuration = builder.Build();
 
-            var appConfiguration = configuration.GetSection("AppSettings").Get<AppSettings>();
-
-            EmailService = new EmailService(appConfiguration.EmailConfiguration);
+            var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
 
             // Actions to be run after each check result
             Action<MonitorResultItem> onCheckCompleteAction = (monitorResultItem) =>
@@ -81,19 +118,21 @@ namespace MonitorPageStatus.ExampleConsoleApp
                 EmailActions.SendEmailOnFail(monitorResultItem, EmailService);
             };
 
-            var monitorConfiguration = new MonitorConfiguration(monitorItems: appConfiguration.MonitorItems, 
+            MonitorService = new MonitorService(new HttpService());
+            EmailService = new EmailService(appSettings.EmailConfiguration);
+            MonitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
                                                                 onCheckCompleteAction: onCheckCompleteAction, 
-                                                                maxDegreeOfParallelism: 3);
-            MonitorService = new MonitorService(monitorConfiguration);
+                                                                maxDegreeOfParallelism: appSettings.MaxDegreeOfParallelism);
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine("Started");
-            
+
             Program program = new Program();
+            
             var runResult = program.MonitorService
-                                    .RunChecks(); // Runs the check
+                                    .RunChecks(program.MonitorConfiguration); // Runs the check
                                     // Optional extentions:
                                     //.FilterOnlySuccessful() // filter so we only get successful checks
                                     //.FilterOnlyFailed() // filter so we only get failed checks
