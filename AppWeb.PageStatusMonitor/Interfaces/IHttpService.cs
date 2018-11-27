@@ -5,8 +5,8 @@ namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IHttpService : IDisposable
     {
-        bool SuccessfulGetResponse(Uri uri);
-        bool SuccessfullPing(Uri uri);
-        bool SuccessfullPing(IPAddress ipAdress);
+        bool GetIsSuccessfull(Uri uri);
+        bool PingIsSuccessfull(Uri uri);
+        bool PingIsSuccessfull(IPAddress ipAdress);
     }
 }

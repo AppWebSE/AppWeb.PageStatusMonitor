@@ -10,81 +10,95 @@ namespace AppWeb.PageStatusMonitor.Services
 {
     public class MonitorService : IMonitorService
     {
-        MonitorConfiguration _monitorConfiguration;
-        IEmailService _emailService;
-        IHttpService _httpService;
+        private IHttpService _httpService { get; set; }
 
-        public MonitorService(MonitorConfiguration monitorConfiguration, EmailConfiguration emailConfiguration = null, HttpConfiguration httpConfiguration = null)
+        public MonitorService(IHttpService httpService)
+        {
+            _httpService = httpService ?? throw new ArgumentNullException(nameof(httpService));
+        }
+
+        /// <summary>
+        /// Runs check on single item
+        /// </summary>
+        /// <param name="monitorItem">The monitor item to check</param>
+        /// <returns>Check result</returns>
+        public MonitorResult Check(MonitorItem monitorItem)
+        {
+            if (monitorItem == null)
+                throw new ArgumentNullException(nameof(monitorItem));
+            
+            return new MonitorResult() {
+                Results = { _checkItem(monitorItem) }
+            };
+        }
+
+        /// <summary>
+        /// Runs checks provided in the monitor configuration
+        /// </summary>
+        /// <param name="monitorConfiguration">The monitor configuration to check</param>
+        /// <returns>The check results</returns>
+        public MonitorResult RunChecks(MonitorConfiguration monitorConfiguration)
         {
             if (monitorConfiguration == null)
                 throw new ArgumentNullException(nameof(monitorConfiguration));
 
-            _monitorConfiguration = monitorConfiguration;
-
-            if (emailConfiguration != null)
-            {
-                _emailService = new EmailService(emailConfiguration);
-            }
-
-            if (httpConfiguration == null)
-            {
-                httpConfiguration = new HttpConfiguration();
-            }
-
-            _httpService = new HttpService(httpConfiguration);
-        }
-        
-        public MonitorResult RunChecks()
-        {
             MonitorResult result = new MonitorResult();
 
-            Parallel.ForEach(_monitorConfiguration.MonitorItems, new ParallelOptions() { MaxDegreeOfParallelism = _monitorConfiguration.MaxDegreeOfParallelism }, item =>
-            {
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                bool successfull = false;
-
-                switch (item.CheckType)
-                {
-                    case CheckType.HttpGet:
-                        if(item.Uri != null)
-                        {
-                            successfull = _httpService.SuccessfulGetResponse(item.Uri);
-                        }
-                        else if(item.IPAddress != null)
-                        {
-                            successfull = _httpService.SuccessfulGetResponse(new Uri($"http://{item.IPAddress}"));
-                        }
-                        break;
-                    case CheckType.Ping:
-                        if (item.Uri != null)
-                        {
-                            successfull = _httpService.SuccessfullPing(item.Uri);
-                        }
-                        else if (item.IPAddress != null)
-                        {
-                            successfull = _httpService.SuccessfullPing(item.IPAddress);
-                        }
-                        break;
+            Parallel.ForEach(
+                monitorConfiguration.MonitorItems, 
+                new ParallelOptions() { MaxDegreeOfParallelism = monitorConfiguration.MaxDegreeOfParallelism }, 
+                monitorItem => {
+                    var monitorResultItem = _checkItem(monitorItem);
+                    result.Results.Add(monitorResultItem);
+                    monitorConfiguration.OnCheckCompleteAction?.Invoke(monitorResultItem);
                 }
-                
-                stopwatch.Stop();
+            );
 
-                var monitorResultItem = new MonitorResultItem(item, successfull, stopwatch.ElapsedMilliseconds);
-
-                _monitorConfiguration.OnCheckCompleteAction?.Invoke(monitorResultItem);
-
-                result.Results.Add(monitorResultItem);
-            });
-            
             return result;
+        }
+
+        private MonitorResultItem _checkItem(MonitorItem monitorItem)
+        {
+            if (monitorItem == null)
+                throw new ArgumentNullException(nameof(monitorItem));
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            bool successfull = false;
+
+            switch (monitorItem.CheckType)
+            {
+                case CheckType.HttpGet:
+                    if (monitorItem.Uri != null)
+                    {
+                        successfull = _httpService.GetIsSuccessfull(monitorItem.Uri);
+                    }
+                    else if (monitorItem.IPAddress != null)
+                    {
+                        successfull = _httpService.GetIsSuccessfull(new Uri($"http://{monitorItem.IPAddress}"));
+                    }
+                    break;
+                case CheckType.Ping:
+                    if (monitorItem.Uri != null)
+                    {
+                        successfull = _httpService.PingIsSuccessfull(monitorItem.Uri);
+                    }
+                    else if (monitorItem.IPAddress != null)
+                    {
+                        successfull = _httpService.PingIsSuccessfull(monitorItem.IPAddress);
+                    }
+                    break;
+            }
+
+            stopwatch.Stop();
+
+            return new MonitorResultItem(monitorItem, successfull, stopwatch.ElapsedMilliseconds);
         }
 
         public void Dispose()
         {
             _httpService.Dispose();
-            _emailService.Dispose();
         }
     }
 }
