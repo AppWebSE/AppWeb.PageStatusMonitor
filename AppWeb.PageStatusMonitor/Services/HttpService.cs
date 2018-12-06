@@ -23,7 +23,7 @@ namespace AppWeb.PageStatusMonitor.Services
             _httpClient.Timeout = httpConfiguration.Timeout;
         }
 
-        public bool SuccessfulGetResponse(Uri uri)
+        public bool GetIsSuccessfull(Uri uri)
         {
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
@@ -45,7 +45,7 @@ namespace AppWeb.PageStatusMonitor.Services
             return false;
         }
 
-        public bool SuccessfullPing(Uri uri)
+        public bool PingIsSuccessfull(Uri uri)
         {
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
@@ -56,7 +56,7 @@ namespace AppWeb.PageStatusMonitor.Services
             return reply.Status == IPStatus.Success;
         }
 
-        public bool SuccessfullPing(IPAddress ipAddress)
+        public bool PingIsSuccessfull(IPAddress ipAddress)
         {
             if (ipAddress == null)
                 throw new ArgumentNullException(nameof(ipAddress));

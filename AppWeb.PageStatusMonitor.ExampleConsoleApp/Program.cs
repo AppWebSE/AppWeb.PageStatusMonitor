@@ -13,6 +13,7 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
     {
         public IMonitorService MonitorService;
         public IEmailService EmailService;
+        public MonitorConfiguration MonitorConfiguration;
 
         public Program()
         {
@@ -24,8 +25,6 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 
             var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
 
-            EmailService = new EmailService(appSettings.EmailConfiguration);
-
             // Actions to be run after each check result
             Action<MonitorResultItem> onCheckCompleteAction = (monitorResultItem) =>
             {
@@ -35,19 +34,21 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
                 EmailActions.SendEmailOnFail(monitorResultItem, EmailService);
             };
 
-            var monitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
+            MonitorService = new MonitorService(new HttpService());
+            EmailService = new EmailService(appSettings.EmailConfiguration);
+            MonitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
                                                                 onCheckCompleteAction: onCheckCompleteAction, 
                                                                 maxDegreeOfParallelism: appSettings.MaxDegreeOfParallelism);
-            MonitorService = new MonitorService(monitorConfiguration);
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine("Started");
-            
+
             Program program = new Program();
+            
             var runResult = program.MonitorService
-                                    .RunChecks(); // Runs the check
+                                    .RunChecks(program.MonitorConfiguration); // Runs the check
                                     // Optional extentions:
                                     //.FilterOnlySuccessful() // filter so we only get successful checks
                                     //.FilterOnlyFailed() // filter so we only get failed checks
