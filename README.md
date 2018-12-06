@@ -1,5 +1,8 @@
 # AppWeb.PageStatusMonitor
-.Net Standard package and application for monitoring the status of your home page. Sends warnings and status updates through email/sms/telegram or your prefferred way when something is wrong.
+.Net Standard package and application for monitoring the status of your home page. 
+Sends warnings and status updates through email/sms/telegram or your prefferred way when something is wrong.
+
+Project url: https://appweb.se/en/packages/page-status-monitor
 
 ## Installation
 The package can be installed through nuget https://www.nuget.org/packages/AppWeb.PageStatusMonitor/
