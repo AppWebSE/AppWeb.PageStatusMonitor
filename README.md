@@ -62,33 +62,33 @@ Monitor items can be configured to chech either a URI och a IPAdress and checkin
 ## Example configuration for more advanced usage
 ```json
 {
-  "AppSettings": {
-    "MaxDegreeOfParallelism": 3,
-    "MonitorItems": [
-      {
-        "CheckUri": "https://www.appweb.se",
-        "CheckType": "HttpGet"
-      },
-      {
-        "CheckIPAddress": "127.0.0.1",
-        "CheckType": "Ping"
-      },
-      {
-        "CheckUri": "https://www.shouldNotExist1337orWhat.se",
-        "CheckType": "HttpGet"
-      }
-    ],
-    "EmailConfiguration": {
-      "FromEmail": "<your-email>",
-      "FromName": "<your-name>",
-      "ToEmail": "<to-email>",
-      "ToName": "<to-name>",
-      "SmtpHost": "<smtp-host>",
-      "SmtpUsername": "<smtp-username>",
-      "SmtpPassword": "<smtp-password>",
-      "UseSSL": true
-    }
-  }
+	"AppSettings": {
+		"EmailConfiguration": {
+			"FromEmail": "<your-email>",
+			"FromName": "<your-name>",
+			"ToEmail": "<to-email>",
+			"ToName": "<to-name>",
+			"SmtpHost": "<smtp-host>",
+			"SmtpUsername": "<smtp-username>",
+			"SmtpPassword": "<smtp-password>",
+			"UseSSL": true
+		},
+		"MaxDegreeOfParallelism": 3,
+		"MonitorItems": [
+			{
+				"CheckUri": "https://www.appweb.se",
+				"CheckType": "HttpGet"
+			},
+			{
+				"CheckIPAddress": "127.0.0.1",
+				"CheckType": "Ping"
+			},
+			{
+				"CheckType": "HttpGet",
+				"CheckUri": "https://www.shouldNotExist1337orWhat.se"
+			}
+		]
+	}
 }
 ```
  
