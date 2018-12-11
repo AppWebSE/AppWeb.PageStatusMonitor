@@ -12,28 +12,28 @@ Install-Package AppWeb.PageStatusMonitor
 
 ## Most simple example usage of monitor service
 ```csharp
-    using AppWeb.PageStatusMonitor.Interfaces;
-    using AppWeb.PageStatusMonitor.Models;
-    using AppWeb.PageStatusMonitor.Services;
-    ...
+using AppWeb.PageStatusMonitor.Interfaces;
+using AppWeb.PageStatusMonitor.Models;
+using AppWeb.PageStatusMonitor.Services;
+...
 
-	// Create monitor service
-    IMonitorService monitorService = new MonitorService();
+// Create monitor service
+IMonitorService monitorService = new MonitorService();
 
-	// Run single check
-    var checkResult = monitorService.Check(new MonitorItem(new Uri("https://appweb.se")));
+// Run single check
+var checkResult = monitorService.Check(new MonitorItem(new Uri("https://appweb.se")));
 
-    // Add your action on the result
-	if(checkResult.Successful)
-	{
-		var responseTime = checkResult.Milliseconds;
-		...
-	}
-	else{
-		...
-	}
+// Add your action on the result
+if(checkResult.Successful)
+{
+	var responseTime = checkResult.Milliseconds;
+	...
+}
+else{
+	...
+}
 
-    ...
+...
 ```
 The code above is the most simple way of using this package and running simple checks.
 
