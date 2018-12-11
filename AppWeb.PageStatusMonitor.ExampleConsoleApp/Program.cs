@@ -11,7 +11,7 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 {
     public class Program
     {
-        public IMonitorService MonitorService;
+		public IMonitorService MonitorService;
         public IEmailService EmailService;
         public MonitorConfiguration MonitorConfiguration;
 
