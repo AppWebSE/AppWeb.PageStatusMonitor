@@ -6,7 +6,7 @@ namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IMonitorService : IDisposable
     {
-        MonitorResult Check(MonitorItem monitorItem);
+        MonitorResultItem Check(MonitorItem monitorItem);
         MonitorResult RunChecks(MonitorConfiguration monitorConfiguration);
     }
 }
