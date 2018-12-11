@@ -11,6 +11,11 @@ namespace AppWeb.PageStatusMonitor.Services
     public class MonitorService : IMonitorService
     {
         private IHttpService _httpService { get; set; }
+               
+        public MonitorService()
+        {
+            _httpService = new HttpService();
+        }
 
         public MonitorService(IHttpService httpService)
         {
@@ -22,14 +27,12 @@ namespace AppWeb.PageStatusMonitor.Services
         /// </summary>
         /// <param name="monitorItem">The monitor item to check</param>
         /// <returns>Check result</returns>
-        public MonitorResult Check(MonitorItem monitorItem)
+        public MonitorResultItem Check(MonitorItem monitorItem)
         {
             if (monitorItem == null)
                 throw new ArgumentNullException(nameof(monitorItem));
-            
-            return new MonitorResult() {
-                Results = { _checkItem(monitorItem) }
-            };
+
+            return _checkItem(monitorItem);
         }
 
         /// <summary>

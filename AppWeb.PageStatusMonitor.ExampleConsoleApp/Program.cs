@@ -34,7 +34,7 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
                 EmailActions.SendEmailOnFail(monitorResultItem, EmailService);
             };
 
-            MonitorService = new MonitorService(new HttpService());
+            MonitorService = new MonitorService();
             EmailService = new EmailService(appSettings.EmailConfiguration);
             MonitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
                                                                 onCheckCompleteAction: onCheckCompleteAction, 

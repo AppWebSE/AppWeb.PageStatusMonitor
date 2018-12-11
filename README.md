@@ -17,11 +17,21 @@ Install-Package AppWeb.PageStatusMonitor
     using AppWeb.PageStatusMonitor.Services;
     ...
 
-    IMonitorService monitorService = new MonitorService(new HttpService());
+	// Create monitor service
+    IMonitorService monitorService = new MonitorService();
 
-    var result = monitorService.Check(new MonitorItem(new Uri("https://appweb.se")));
+	// Run single check
+    var checkResult = monitorService.Check(new MonitorItem(new Uri("https://appweb.se")));
 
-    // add your action on the result
+    // Add your action on the result
+	if(checkResult.Successful)
+	{
+		var responseTime = checkResult.Milliseconds;
+		...
+	}
+	else{
+		...
+	}
 
     ...
 ```
