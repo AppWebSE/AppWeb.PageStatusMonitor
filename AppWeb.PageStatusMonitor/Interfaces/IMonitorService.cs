@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AppWeb.PageStatusMonitor.Configurations;
 using AppWeb.PageStatusMonitor.Models;
 
@@ -8,5 +9,6 @@ namespace AppWeb.PageStatusMonitor.Interfaces
     {
         MonitorResultItem Check(MonitorItem monitorItem);
         MonitorResult RunChecks(MonitorConfiguration monitorConfiguration);
-    }
+		Task<MonitorResult> RunChecksAsync(MonitorConfiguration monitorConfiguration);
+	}
 }

@@ -26,11 +26,11 @@ var checkResult = monitorService.Check(new MonitorItem(new Uri("https://appweb.s
 // Add your action on the result
 if(checkResult.Successful)
 {
-	var responseTime = checkResult.Milliseconds;
-	...
+    var responseTime = checkResult.Milliseconds;
+    ...
 }
 else{
-	...
+    ...
 }
 
 ...
@@ -41,54 +41,53 @@ The code above is the most simple way of using this package and running simple c
 Monitor items can be configured to chech either a URI och a IPAdress and checking if either a Get request or a Ping is successful. More advanced use cases will be supported in the future.
 
 ```csharp
-    using AppWeb.PageStatusMonitor.Enums;
-    using AppWeb.PageStatusMonitor.Models;
-    ...
+using AppWeb.PageStatusMonitor.Enums;
+using AppWeb.PageStatusMonitor.Models;
+...
 
-    // URI, when no CheckType is provided it will perform HttpGet by default
-    var item1 = new MonitorItem(new Uri("https://appweb.se"));
-    // URI to be checked with ping 
-    var item2 = new MonitorItem(new Uri("https://appweb.se"), CheckType.Ping);
+// URI, when no CheckType is provided it will perform HttpGet by default
+var item1 = new MonitorItem(new Uri("https://appweb.se"));
+// URI to be checked with ping 
+var item2 = new MonitorItem(new Uri("https://appweb.se"), CheckType.Ping);
 
 
-    // IPAddress to explicity be checked with Get-request
-    var item3 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.HttpGet);
-    // IPAdddress to be checked with ping 
-    var item4 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.Ping);
+// IPAddress to explicity be checked with Get-request
+var item3 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.HttpGet);
+// IPAdddress to be checked with ping 
+var item4 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.Ping);
 
-    ...
+...
 ```
 
 ## Example configuration for more advanced usage
 ```json
 {
-	"AppSettings": {
-		"EmailConfiguration": {
-			"FromEmail": "<your-email>",
-			"FromName": "<your-name>",
-			"ToEmail": "<to-email>",
-			"ToName": "<to-name>",
-			"SmtpHost": "<smtp-host>",
-			"SmtpUsername": "<smtp-username>",
-			"SmtpPassword": "<smtp-password>",
-			"UseSSL": true
-		},
-		"MaxDegreeOfParallelism": 3,
-		"MonitorItems": [
-			{
-				"CheckUri": "https://www.appweb.se",
-				"CheckType": "HttpGet"
-			},
-			{
-				"CheckIPAddress": "127.0.0.1",
-				"CheckType": "Ping"
-			},
-			{
-				"CheckType": "HttpGet",
-				"CheckUri": "https://www.shouldNotExist1337orWhat.se"
-			}
-		]
-	}
+    "AppSettings": {
+        "EmailConfiguration": {
+            "FromEmail": "<your-email>",
+            "FromName": "<your-name>",
+            "ToEmail": "<to-email>",
+            "ToName": "<to-name>",
+            "SmtpHost": "<smtp-host>",
+            "SmtpUsername": "<smtp-username>",
+            "SmtpPassword": "<smtp-password>",
+            "UseSSL": true
+        },
+        "MonitorItems": [
+            {
+                "CheckUri": "https://www.appweb.se",
+                "CheckType": "HttpGet"
+            },
+            {
+                "CheckIPAddress": "127.0.0.1",
+                "CheckType": "Ping"
+            },
+            {
+                "CheckType": "HttpGet",
+                "CheckUri": "https://www.shouldNotExist1337orWhat.se"
+            }
+        ]
+    }
 }
 ```
  
@@ -133,9 +132,7 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 
             MonitorService = new MonitorService(new HttpService());
             EmailService = new EmailService(appSettings.EmailConfiguration);
-            MonitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
-                                                                onCheckCompleteAction: onCheckCompleteAction, 
-                                                                maxDegreeOfParallelism: appSettings.MaxDegreeOfParallelism);
+            MonitorConfiguration = new MonitorConfiguration(appSettings.MonitorItems, onCheckCompleteAction);
         }
 
         static void Main(string[] args)

@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IEmailService : IDisposable
     {
-        bool SendEmail(string subject, string body, bool isBodyHtml);
+        Task<bool> SendEmail(string subject, string body, bool isBodyHtml);
     }
 }

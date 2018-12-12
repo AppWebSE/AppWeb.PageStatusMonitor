@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AppWeb.PageStatusMonitor.Services
 {
@@ -15,25 +16,26 @@ namespace AppWeb.PageStatusMonitor.Services
 
         public EmailService(EmailConfiguration emailConfiguration)
         {
-            if (emailConfiguration == null)
-                throw new ArgumentNullException(nameof(emailConfiguration));
-
-            _emailConfiguration = emailConfiguration;
+			_emailConfiguration = emailConfiguration ?? throw new ArgumentNullException(nameof(emailConfiguration));
 
             _smtpClient = new SmtpClient(_emailConfiguration.SmtpHost);
             _smtpClient.Credentials = new NetworkCredential(_emailConfiguration.SmtpUsername, _emailConfiguration.SmtpPassword);
             _smtpClient.EnableSsl = _emailConfiguration.UseSSL;
         }
         
-        public bool SendEmail(string subject, string body, bool isBodyHtml)
+        public async Task<bool> SendEmail(string subject, string body, bool isBodyHtml)
         {
             if (subject == null)
-                throw new ArgumentNullException(nameof(subject));
+			{
+				throw new ArgumentNullException(nameof(subject));
+			}
 
-            if (body == null)
-                throw new ArgumentNullException(nameof(body));
+			if (body == null)
+			{
+				throw new ArgumentNullException(nameof(body));
+			}
 
-            try
+			try
             {
                 MailAddress fromAddress = new MailAddress(_emailConfiguration.FromEmail, _emailConfiguration.FromName);
                 MailAddress toAddress = new MailAddress(_emailConfiguration.ToEmail, _emailConfiguration.ToName);
@@ -46,7 +48,7 @@ namespace AppWeb.PageStatusMonitor.Services
                     IsBodyHtml = isBodyHtml
                 };
 
-                _smtpClient.Send(mailMessage);
+                await _smtpClient.SendMailAsync(mailMessage);
 
                 return true;
             }
