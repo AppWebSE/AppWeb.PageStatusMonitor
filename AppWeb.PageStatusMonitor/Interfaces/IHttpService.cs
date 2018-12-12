@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IHttpService : IDisposable
     {
-        bool GetIsSuccessfull(Uri uri);
-        bool PingIsSuccessfull(Uri uri);
-        bool PingIsSuccessfull(IPAddress ipAdress);
+        Task<bool> GetIsSuccessfullAsync(Uri uri);
+		Task<bool> PingIsSuccessfullAsync(Uri uri);
+		Task<bool> PingIsSuccessfullAsync(IPAddress ipAdress);
     }
 }

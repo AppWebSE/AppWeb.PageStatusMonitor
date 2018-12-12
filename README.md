@@ -73,7 +73,6 @@ Monitor items can be configured to chech either a URI och a IPAdress and checkin
 			"SmtpPassword": "<smtp-password>",
 			"UseSSL": true
 		},
-		"MaxDegreeOfParallelism": 3,
 		"MonitorItems": [
 			{
 				"CheckUri": "https://www.appweb.se",
@@ -133,9 +132,7 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 
             MonitorService = new MonitorService(new HttpService());
             EmailService = new EmailService(appSettings.EmailConfiguration);
-            MonitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
-                                                                onCheckCompleteAction: onCheckCompleteAction, 
-                                                                maxDegreeOfParallelism: appSettings.MaxDegreeOfParallelism);
+            MonitorConfiguration = new MonitorConfiguration(appSettings.MonitorItems, onCheckCompleteAction);
         }
 
         static void Main(string[] args)

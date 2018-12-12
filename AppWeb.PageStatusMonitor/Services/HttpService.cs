@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using AppWeb.PageStatusMonitor.Configurations;
 using AppWeb.PageStatusMonitor.Interfaces;
 
@@ -23,14 +24,16 @@ namespace AppWeb.PageStatusMonitor.Services
             _httpClient.Timeout = httpConfiguration.Timeout;
         }
 
-        public bool GetIsSuccessfull(Uri uri)
+        public async Task<bool> GetIsSuccessfullAsync(Uri uri)
         {
             if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+			{
+				throw new ArgumentNullException(nameof(uri));
+			}
 
-            try
+			try
             {
-                var response = _httpClient.GetAsync(uri).Result;
+                var response = await _httpClient.GetAsync(uri);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception e)
@@ -45,25 +48,28 @@ namespace AppWeb.PageStatusMonitor.Services
             return false;
         }
 
-        public bool PingIsSuccessfull(Uri uri)
+        public async Task<bool> PingIsSuccessfullAsync(Uri uri)
         {
             if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+			{
+				throw new ArgumentNullException(nameof(uri));
+			}
 
-            var pinger = new Ping();
-            PingReply reply = pinger.Send(uri.Host);
+			var pinger = new Ping();
+            PingReply reply = await pinger.SendPingAsync(uri.Host);
 
             return reply.Status == IPStatus.Success;
         }
 
-        public bool PingIsSuccessfull(IPAddress ipAddress)
+        public async Task<bool> PingIsSuccessfullAsync(IPAddress ipAddress)
         {
             if (ipAddress == null)
-                throw new ArgumentNullException(nameof(ipAddress));
-                
+			{
+				throw new ArgumentNullException(nameof(ipAddress));
+			}
 
-            var pinger = new Ping();
-            PingReply reply = pinger.Send(ipAddress);
+			var pinger = new Ping();
+            PingReply reply = await pinger.SendPingAsync(ipAddress);
 
             return reply.Status == IPStatus.Success;
         }

@@ -7,13 +7,11 @@ namespace AppWeb.PageStatusMonitor.Configurations
 {
     public class AppSettings
     {
-        public int MaxDegreeOfParallelism { get; set; }
         public List<MonitorItem> MonitorItems { get; set; }
         public EmailConfiguration EmailConfiguration { get; set; }
 
         public AppSettings()
         {
-            MaxDegreeOfParallelism = 3;
         }
     }
 }

@@ -18,7 +18,8 @@ namespace AppWeb.PageStatusMonitor.Actions
             }
         };
 
-        public static Action<MonitorResult> WriteSuccessfulSummary = (monitorResult) => {
+        public static Action<MonitorResult> WriteSuccessfulSummary = (monitorResult) => 
+		{
             Console.WriteLine();
             Console.WriteLine("Summary successful checks:");
             foreach (var result in monitorResult.Results.Where(x => x.Successful))
@@ -27,7 +28,8 @@ namespace AppWeb.PageStatusMonitor.Actions
             }
         };
 
-        public static Action<MonitorResult> WriteFailedSummary = (monitorResult) => {
+        public static Action<MonitorResult> WriteFailedSummary = (monitorResult) => 
+		{
             Console.WriteLine();
             Console.WriteLine("Summary not successful checks:");
             foreach (var result in monitorResult.Results.Where(x => !x.Successful))

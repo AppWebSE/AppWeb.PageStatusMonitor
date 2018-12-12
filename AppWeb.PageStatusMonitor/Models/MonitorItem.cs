@@ -11,11 +11,16 @@ namespace AppWeb.PageStatusMonitor.Models
         public Uri Uri {
             get
             {
-                if (_uri != null) return _uri;
-                if (!string.IsNullOrEmpty(CheckUri)) {
+                if (_uri != null)
+				{
+					return _uri;
+				}
+
+				if (!string.IsNullOrEmpty(CheckUri)) {
                     _uri = new Uri(CheckUri);
                     return _uri;
                 }
+
                 return null;
             }
             set
@@ -28,12 +33,17 @@ namespace AppWeb.PageStatusMonitor.Models
         private IPAddress _ipAddress { get; set; }
         public IPAddress IPAddress {
             get {
-                if (_ipAddress != null) return _ipAddress;
-                if (!string.IsNullOrEmpty(CheckIPAddress))
+                if (_ipAddress != null)
+				{
+					return _ipAddress;
+				}
+
+				if (!string.IsNullOrEmpty(CheckIPAddress))
                 {
                     _ipAddress = IPAddress.Parse(CheckIPAddress);
                     return _ipAddress;
                 }
+
                 return null;
             }
             set
@@ -50,19 +60,13 @@ namespace AppWeb.PageStatusMonitor.Models
 
         public MonitorItem(Uri uri, CheckType checkType = CheckType.HttpGet)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-
-            _uri = uri;
+			_uri = uri ?? throw new ArgumentNullException(nameof(uri));
             CheckType = checkType;
         }
 
         public MonitorItem(IPAddress ipAddress, CheckType checkType = CheckType.HttpGet)
         {
-            if (ipAddress == null)
-                throw new ArgumentNullException(nameof(ipAddress));
-
-            _ipAddress = ipAddress;
+			_ipAddress = ipAddress ?? throw new ArgumentNullException(nameof(ipAddress));
             CheckType = checkType;
         }
 

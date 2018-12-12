@@ -12,10 +12,7 @@ namespace AppWeb.PageStatusMonitor.Models
 
         public MonitorResultItem(MonitorItem monitorItem, bool successful, long milliSeconds)
         {
-            if (monitorItem == null)
-                throw new ArgumentNullException(nameof(monitorItem));
-
-            MonitorItem = monitorItem;
+			MonitorItem = monitorItem ?? throw new ArgumentNullException(nameof(monitorItem));
             Successful = successful;
             Milliseconds = milliSeconds;
         }

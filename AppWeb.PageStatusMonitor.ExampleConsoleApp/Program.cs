@@ -36,10 +36,8 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 
             MonitorService = new MonitorService();
             EmailService = new EmailService(appSettings.EmailConfiguration);
-            MonitorConfiguration = new MonitorConfiguration(monitorItems: appSettings.MonitorItems, 
-                                                                onCheckCompleteAction: onCheckCompleteAction, 
-                                                                maxDegreeOfParallelism: appSettings.MaxDegreeOfParallelism);
-        }
+			MonitorConfiguration = new MonitorConfiguration(appSettings.MonitorItems, onCheckCompleteAction);
+		}
 
         static void Main(string[] args)
         {
