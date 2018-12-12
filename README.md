@@ -41,22 +41,22 @@ The code above is the most simple way of using this package and running simple c
 Monitor items can be configured to chech either a URI och a IPAdress and checking if either a Get request or a Ping is successful. More advanced use cases will be supported in the future.
 
 ```csharp
-    using AppWeb.PageStatusMonitor.Enums;
-    using AppWeb.PageStatusMonitor.Models;
-    ...
+using AppWeb.PageStatusMonitor.Enums;
+using AppWeb.PageStatusMonitor.Models;
+...
 
-    // URI, when no CheckType is provided it will perform HttpGet by default
-    var item1 = new MonitorItem(new Uri("https://appweb.se"));
-    // URI to be checked with ping 
-    var item2 = new MonitorItem(new Uri("https://appweb.se"), CheckType.Ping);
+// URI, when no CheckType is provided it will perform HttpGet by default
+var item1 = new MonitorItem(new Uri("https://appweb.se"));
+// URI to be checked with ping 
+var item2 = new MonitorItem(new Uri("https://appweb.se"), CheckType.Ping);
 
 
-    // IPAddress to explicity be checked with Get-request
-    var item3 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.HttpGet);
-    // IPAdddress to be checked with ping 
-    var item4 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.Ping);
+// IPAddress to explicity be checked with Get-request
+var item3 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.HttpGet);
+// IPAdddress to be checked with ping 
+var item4 = new MonitorItem(IPAddress.Parse("127.0.0.1"), CheckType.Ping);
 
-    ...
+...
 ```
 
 ## Example configuration for more advanced usage
