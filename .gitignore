@@ -289,3 +289,4 @@ __pycache__/
 
 # private settings
 /AppWeb.PageStatusMonitor.ExampleConsoleApp/appsettings.PRIVATE.json
+/.vscode
