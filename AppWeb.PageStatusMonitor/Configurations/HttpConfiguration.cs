@@ -15,7 +15,7 @@ namespace AppWeb.PageStatusMonitor.Configurations
 
         public HttpConfiguration(int timeoutSeconds)
         {
-            Timeout = TimeSpan.FromSeconds(15);
+            Timeout = TimeSpan.FromSeconds(timeoutSeconds);
         }
 
     }

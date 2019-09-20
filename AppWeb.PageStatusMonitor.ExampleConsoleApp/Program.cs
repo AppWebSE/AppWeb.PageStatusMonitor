@@ -25,6 +25,9 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
 
             var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
 
+            MonitorService = new MonitorService();
+            EmailService = new EmailService(appSettings.EmailConfiguration);
+
             // Actions to be run after each check result
             Action<MonitorResultItem> onCheckCompleteAction = (monitorResultItem) =>
             {
@@ -34,8 +37,6 @@ namespace AppWeb.PageStatusMonitor.ExampleConsoleApp
                 EmailActions.SendEmailOnFail(monitorResultItem, EmailService);
             };
 
-            MonitorService = new MonitorService();
-            EmailService = new EmailService(appSettings.EmailConfiguration);
 			MonitorConfiguration = new MonitorConfiguration(appSettings.MonitorItems, onCheckCompleteAction);
 		}
 
