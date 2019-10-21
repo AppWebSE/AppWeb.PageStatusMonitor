@@ -23,7 +23,7 @@ namespace AppWeb.PageStatusMonitor.Services
             _smtpClient.EnableSsl = _emailConfiguration.UseSSL;
         }
         
-        public async Task<bool> SendEmail(string subject, string body, bool isBodyHtml)
+        public async Task<bool> SendEmailAsync(string subject, string body, bool isBodyHtml)
         {
             if (subject == null)
 			{
@@ -48,7 +48,7 @@ namespace AppWeb.PageStatusMonitor.Services
                     IsBodyHtml = isBodyHtml
                 };
 
-                await _smtpClient.SendMailAsync(mailMessage);
+                await _smtpClient.SendMailAsync(mailMessage).ConfigureAwait(false);
 
                 return true;
             }

@@ -23,59 +23,59 @@ namespace AppWeb.PageStatusMonitor.Services
 		{
 			_httpService = httpService ?? throw new ArgumentNullException(nameof(httpService));
 		}
-		/// <summary>
-		/// Runs check on single item
-		/// </summary>
-		/// <param name="monitorItem">The monitor item to check</param>
-		/// <returns>Check result</returns>
-		public MonitorResultItem Check(MonitorItem monitorItem)
+        /// <summary>
+        /// Runs check on single item synchronously 
+        /// </summary>
+        /// <param name="monitorItem">The monitor item to check</param>
+        /// <returns>Check result</returns>
+        public MonitorResultItem Check(MonitorItem monitorItem)
 		{
 			if (monitorItem == null)
 			{
 				throw new ArgumentNullException(nameof(monitorItem));
 			}
 
-			return CheckAsync(monitorItem).Result;
+			return CheckAsync(monitorItem).GetAwaiter().GetResult();
 		}
 
-		/// <summary>
-		/// Runs check on single item
-		/// </summary>
-		/// <param name="monitorItem">The monitor item to check</param>
-		/// <returns>Check result</returns>
-		public async Task<MonitorResultItem> CheckAsync(MonitorItem monitorItem)
+        /// <summary>
+        /// Runs check on single item asynchronously 
+        /// </summary>
+        /// <param name="monitorItem">The monitor item to check</param>
+        /// <returns>Check result</returns>
+        public async Task<MonitorResultItem> CheckAsync(MonitorItem monitorItem)
 		{
 			if (monitorItem == null)
 			{
 				throw new ArgumentNullException(nameof(monitorItem));
 			}
 
-			return await RunCheckOnItemAsync(monitorItem, null);
+            return await RunCheckOnItemAsync(monitorItem, null).ConfigureAwait(false);
 		}
 
-		/// <summary>
-		/// Runs checks provided in the monitor configuration
-		/// </summary>
-		/// <param name="monitorConfiguration">The monitor configuration to check</param>
-		/// <returns>The check results</returns>
-		public MonitorResult RunChecks(MonitorConfiguration monitorConfiguration)
+        /// <summary>
+        /// Runs checks provided in the monitor configuration synchronously 
+        /// </summary>
+        /// <param name="monitorConfiguration">The monitor configuration to check</param>
+        /// <returns>The check results</returns>
+        public MonitorResult RunChecks(MonitorConfiguration monitorConfiguration)
 		{
 			if (monitorConfiguration == null)
 			{
 				throw new ArgumentNullException(nameof(monitorConfiguration));
 			}
 
-			var result = RunChecksAsync(monitorConfiguration).Result;
+			var result = RunChecksAsync(monitorConfiguration).GetAwaiter().GetResult();
 
 			return result;
 		}
 
-		/// <summary>
-		/// Runs checks provided in the monitor configuration asyncronosly
-		/// </summary>
-		/// <param name="monitorConfiguration">The monitor configuration to check</param>
-		/// <returns>The check results</returns>
-		public async Task<MonitorResult> RunChecksAsync(MonitorConfiguration monitorConfiguration)
+        /// <summary>
+        /// Runs checks provided in the monitor configuration asynchronously 
+        /// </summary>
+        /// <param name="monitorConfiguration">The monitor configuration to check</param>
+        /// <returns>The check results</returns>
+        public async Task<MonitorResult> RunChecksAsync(MonitorConfiguration monitorConfiguration)
 		{
 			if (monitorConfiguration == null)
 			{
@@ -88,7 +88,7 @@ namespace AppWeb.PageStatusMonitor.Services
 				tasks.Add(RunCheckOnItemAsync(monitorItem, monitorConfiguration));
 			}
 
-			var checkResults = await Task.WhenAll(tasks);
+			var checkResults = await Task.WhenAll(tasks).ConfigureAwait(false);
 					   
 			return new MonitorResult(){
 				Results = checkResults.ToList()
@@ -97,7 +97,7 @@ namespace AppWeb.PageStatusMonitor.Services
 		 
 		private async Task<MonitorResultItem> RunCheckOnItemAsync(MonitorItem monitorItem, MonitorConfiguration monitorConfiguration)
 		{
-			var checkResult = await CheckItemAsync(monitorItem);
+			var checkResult = await CheckItemAsync(monitorItem).ConfigureAwait(false);
 
 			monitorConfiguration?.OnCheckCompleteAction?.Invoke(checkResult);
 
@@ -121,21 +121,21 @@ namespace AppWeb.PageStatusMonitor.Services
                 case CheckType.HttpGet:
                     if (monitorItem.Uri != null)
                     {
-                        successfull = await _httpService.GetIsSuccessfullAsync(monitorItem.Uri);
+                        successfull = await _httpService.GetIsSuccessfullAsync(monitorItem.Uri).ConfigureAwait(false);
                     }
                     else if (monitorItem.IPAddress != null)
                     {
-                        successfull = await _httpService.GetIsSuccessfullAsync(new Uri($"http://{monitorItem.IPAddress}"));
+                        successfull = await _httpService.GetIsSuccessfullAsync(new Uri($"http://{monitorItem.IPAddress}")).ConfigureAwait(false);
                     }
                     break;
                 case CheckType.Ping:
                     if (monitorItem.Uri != null)
                     {
-                        successfull = await _httpService.PingIsSuccessfullAsync(monitorItem.Uri);
+                        successfull = await _httpService.PingIsSuccessfullAsync(monitorItem.Uri).ConfigureAwait(false);
                     }
                     else if (monitorItem.IPAddress != null)
                     {
-                        successfull = await _httpService.PingIsSuccessfullAsync(monitorItem.IPAddress);
+                        successfull = await _httpService.PingIsSuccessfullAsync(monitorItem.IPAddress).ConfigureAwait(false);
                     }
                     break;
             }
@@ -148,8 +148,6 @@ namespace AppWeb.PageStatusMonitor.Services
         public void Dispose()
         {
             _httpService.Dispose();
-        }
-
-		
+        }		
 	}
 }

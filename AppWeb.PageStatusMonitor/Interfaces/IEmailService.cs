@@ -8,6 +8,6 @@ namespace AppWeb.PageStatusMonitor.Interfaces
 {
     public interface IEmailService : IDisposable
     {
-        Task<bool> SendEmail(string subject, string body, bool isBodyHtml);
+        Task<bool> SendEmailAsync(string subject, string body, bool isBodyHtml);
     }
 }
