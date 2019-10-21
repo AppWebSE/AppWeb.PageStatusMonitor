@@ -7,13 +7,22 @@
     <Description>Package to enable monitoring the health status of your home page. Can send warnings and status updates through email or your own custom prefferred way when something is wrong.</Description>
     <RepositoryUrl>https://github.com/amattias/AppWeb.PageStatusMonitor</RepositoryUrl>
     <PackageProjectUrl>https://appweb.se/en/packages/page-status-monitor</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/AppWebSE/AppWeb.PageStatusMonitor/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageTags>Uptime Monitoring Page Website Health</PackageTags>
-    <PackageReleaseNotes>Fixed so configured http timeout is honored</PackageReleaseNotes>
-    <Version>0.2.7</Version>
-    <AssemblyVersion>0.0.2.6</AssemblyVersion>
-    <FileVersion>0.0.2.7</FileVersion>
+    <PackageReleaseNotes>Some asynchronous improvements to prevent potential deadlocks in UI applications or similar</PackageReleaseNotes>
+    <Version>0.2.8</Version>
+    <AssemblyVersion>0.0.2.8</AssemblyVersion>
+    <FileVersion>0.0.2.8</FileVersion>
     <PackageIconUrl>https://appweb.se/favicon.ico</PackageIconUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
