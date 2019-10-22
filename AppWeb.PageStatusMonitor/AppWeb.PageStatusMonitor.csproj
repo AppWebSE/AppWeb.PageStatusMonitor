@@ -9,20 +9,18 @@
     <PackageProjectUrl>https://appweb.se/en/packages/page-status-monitor</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageTags>Uptime Monitoring Page Website Health</PackageTags>
-    <PackageReleaseNotes>Some asynchronous improvements to prevent potential deadlocks in UI applications or similar</PackageReleaseNotes>
-    <Version>0.2.8</Version>
-    <AssemblyVersion>0.0.2.8</AssemblyVersion>
-    <FileVersion>0.0.2.8</FileVersion>
-    <PackageIconUrl>https://appweb.se/favicon.ico</PackageIconUrl>
+    <PackageReleaseNotes>Nuget packaging adjustments</PackageReleaseNotes>
+    <Version>0.2.10</Version>
+    <AssemblyVersion>0.0.2.10</AssemblyVersion>
+    <FileVersion>0.0.2.10</FileVersion>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\icon.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
 </Project>
